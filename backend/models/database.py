@@ -17,6 +17,7 @@ class User(BaseModel, table=True):
     role: RoleEnum = Field(default=RoleEnum.USER)
 
     courses: list["Course"] = Relationship(back_populates="user")
+    discussions: list["Discussion"] = Relationship(back_populates="user")
 
 
 class AppSettings(BaseModel, table=True):
@@ -65,3 +66,20 @@ class Lesson(BaseModel, table=True):
 
     section_id: str = Field(foreign_key="section.id")
     section: Section = Relationship(back_populates="lessons")
+
+    discussions: list["Discussion"] = Relationship(back_populates="lesson")
+
+
+class Discussion(BaseModel, table=True):
+    content: str
+
+    lesson_id: str = Field(foreign_key="lesson.id")
+    lesson: Lesson = Relationship(back_populates="discussions")
+
+    user_id: str = Field(foreign_key="user.id")
+    user: User = Relationship(back_populates="discussions")
+
+
+class Enrollment(BaseModel, table=True):
+    user_id: str = Field(foreign_key="user.id")
+    course_id: str = Field(foreign_key="course.id")
