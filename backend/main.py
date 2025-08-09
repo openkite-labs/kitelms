@@ -1,6 +1,8 @@
-from core.settings import settings
 from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
+
+from backend.core.settings import settings
+from backend.modules.auth.auth_routes import auth_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -10,6 +12,9 @@ app = FastAPI(
     docs_url=settings.APP_DOCS_URL,
     redoc_url=settings.APP_REDOC_URL,
 )
+
+
+app.include_router(auth_router)
 
 
 @app.get("/health")
@@ -22,6 +27,4 @@ async def scalar_api_reference():
     return get_scalar_api_reference(
         openapi_url=settings.APP_OPENAPI_URL,
         title=settings.APP_NAME,
-        version=settings.APP_VERSION,
-        description=settings.APP_DESCRIPTION,
     )
