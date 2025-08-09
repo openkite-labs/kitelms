@@ -12,6 +12,11 @@ app = FastAPI(
 )
 
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
 @app.get("/scalar", include_in_schema=False)
 async def scalar_api_reference():
     return get_scalar_api_reference(
