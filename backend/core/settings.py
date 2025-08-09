@@ -6,8 +6,11 @@ class Settings(BaseSettings):
     APP_NAME: str = "kiteLMS"
     APP_VERSION: str = "0.0.1"
     APP_DESCRIPTION: str = "kiteLMS is a learning management system"
+    APP_OPENAPI_URL: str = "/openapi.json"
+    APP_SCALAR_URL: str = "/scalar"
+    APP_DOCS_URL: None | str = None
+    APP_REDOC_URL: None | str = None
     APP_DEBUG: bool = False
-    APP_PORT: int = 8000
 
     # Database settings
     DB_NAME: str = "kiteLMS"

@@ -333,6 +333,7 @@ dependencies = [
     { name = "psycopg2-binary" },
     { name = "pydantic-settings" },
     { name = "ruff" },
+    { name = "scalar-fastapi" },
     { name = "sqlmodel" },
 ]
 
@@ -344,6 +345,7 @@ requires-dist = [
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "pydantic-settings", specifier = ">=2.10.1" },
     { name = "ruff", specifier = ">=0.12.8" },
+    { name = "scalar-fastapi", specifier = ">=1.2.3" },
     { name = "sqlmodel", specifier = ">=0.0.24" },
 ]
 
@@ -674,6 +676,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/71/13/ab9120add1c0e4604c71bfc2e4ef7d63bebece0cfe617013da289539cef8/ruff-0.12.8-py3-none-win32.whl", hash = "sha256:daf3475060a617fd5bc80638aeaf2f5937f10af3ec44464e280a9d2218e720d3", size = 11694382 },
     { url = "https://files.pythonhosted.org/packages/f6/dc/a2873b7c5001c62f46266685863bee2888caf469d1edac84bf3242074be2/ruff-0.12.8-py3-none-win_amd64.whl", hash = "sha256:7209531f1a1fcfbe8e46bcd7ab30e2f43604d8ba1c49029bb420b103d0b5f76e", size = 12740482 },
     { url = "https://files.pythonhosted.org/packages/cb/5c/799a1efb8b5abab56e8a9f2a0b72d12bd64bb55815e9476c7d0a2887d2f7/ruff-0.12.8-py3-none-win_arm64.whl", hash = "sha256:c90e1a334683ce41b0e7a04f41790c429bf5073b62c1ae701c9dc5b3d14f0749", size = 11884718 },
+]
+
+[[package]]
+name = "scalar-fastapi"
+version = "1.2.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/f2/28e52535f13bef8781e45cb92a28fe52f28c300a132fc9d8f3db52e2f26e/scalar_fastapi-1.2.3.tar.gz", hash = "sha256:cf9ba36947ea1b0402fc1fa311f30a690b39e3baedef1f7b4553cf57002daceb", size = 10356 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0f/d7/7b32f0dd732a8c19b97005179bf5e9a0dbddb76341fea3c967c77b95e722/scalar_fastapi-1.2.3-py3-none-any.whl", hash = "sha256:15e0809d05d5b476faf299c3f20e003c6a594ea00d8be50db2efd23b5a9be30d", size = 12450 },
 ]
 
 [[package]]
