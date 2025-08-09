@@ -11,6 +11,7 @@ app = FastAPI(
     redoc_url=settings.APP_REDOC_URL,
 )
 
+
 @app.get("/scalar", include_in_schema=False)
 async def scalar_api_reference():
     return get_scalar_api_reference(

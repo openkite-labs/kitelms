@@ -15,3 +15,12 @@ dependencies = [
     "scalar-fastapi>=1.2.3",
     "sqlmodel>=0.0.24",
 ]
+
+[tool.ruff]
+line-length = 120
+lint.select = ["E", "F", "W", "I"]
+exclude = [
+    "alembic",
+    "venv",
+    "frontend"
+]
