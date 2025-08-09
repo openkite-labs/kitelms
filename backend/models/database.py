@@ -14,4 +14,4 @@ class User(BaseModel, table=True):
     name: str
     email: str = Field(unique=True)
     password: str
-    role: RoleEnum = Field(default=RoleEnum.user)
+    role: RoleEnum = Field(default=RoleEnum.USER)
