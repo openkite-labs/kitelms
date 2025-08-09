@@ -20,3 +20,8 @@ class User(BaseModel, table=True):
 class AppSettings(BaseModel, table=True):
     has_admin: bool = Field(default=False)
     enable_signup: bool = Field(default=False)
+
+    # Oauth Settings
+    google_client_id: str = Field(default="")
+    google_client_secret: str = Field(default="")
+    google_redirect_uri: str = Field(default="")
