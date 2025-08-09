@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
 
 from backend.core.settings import settings
@@ -11,6 +12,14 @@ app = FastAPI(
     openapi_url=settings.APP_OPENAPI_URL,
     docs_url=settings.APP_DOCS_URL,
     redoc_url=settings.APP_REDOC_URL,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
+    allow_methods=settings.CORS_ALLOW_METHODS,
+    allow_headers=settings.CORS_ALLOW_HEADERS,
 )
 
 

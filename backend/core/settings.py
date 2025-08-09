@@ -34,13 +34,6 @@ class Settings(BaseSettings):
     CORS_ALLOW_HEADERS: list = ["*"]
     CORS_ALLOW_CREDENTIALS: bool = True
 
-    # Email settings
-    EMAIL_HOST: str = "smtp.gmail.com"
-    EMAIL_PORT: int = 587
-    EMAIL_USER: str = "kite.lms@gmail.com"
-    EMAIL_PASSWORD: str = "kite.lms.123"
-    EMAIL_FROM: str = "kite.lms@gmail.com"
-
     class Config:
         env_file = ".env"
         extra = "ignore"
