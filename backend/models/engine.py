@@ -4,6 +4,7 @@ from backend.core.settings import settings
 
 engine = create_engine(settings.DB_URI)
 
+
 def get_session():
     with Session(engine) as session:
         yield session
