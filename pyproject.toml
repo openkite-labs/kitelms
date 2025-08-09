@@ -1,0 +1,15 @@
+[project]
+name = "kitelms"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.16.4",
+    "fastapi[standard]>=0.116.1",
+    "granian>=2.5.0",
+    "psycopg2-binary>=2.9.10",
+    "pydantic-settings>=2.10.1",
+    "ruff>=0.12.8",
+    "sqlmodel>=0.0.24",
+]
