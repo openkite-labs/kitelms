@@ -5,7 +5,7 @@ from sqlmodel import SQLModel
 
 from alembic import context
 from backend.core.settings import settings
-from backend.models.database import User  # noqa
+from backend.models.database import AppSettings, User  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

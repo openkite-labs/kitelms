@@ -13,9 +13,9 @@ class Settings(BaseSettings):
     APP_DEBUG: bool = False
 
     # Database settings
-    DB_NAME: str = "kitelms"
-    DB_USER: str = "kitelms"
-    DB_PASSWORD: str = "kitelms"
+    DB_NAME: str = "postgres"
+    DB_USER: str = "postgres"
+    DB_PASSWORD: str = "postgres"
     DB_HOST: str = "localhost"
     DB_PORT: int = 5432
 
