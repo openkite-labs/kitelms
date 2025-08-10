@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
@@ -932,8 +931,8 @@ class TestLessonIntegration:
         for i, section in enumerate(sections):
             for j in range(1, 3):  # 2 lessons per section
                 lesson = Lesson(
-                    title=f"Section {i+1} Lesson {j}",
-                    content=f"Content for section {i+1} lesson {j}",
+                    title=f"Section {i + 1} Lesson {j}",
+                    content=f"Content for section {i + 1} lesson {j}",
                     order=j,
                     section_id=section.id
                 )
@@ -957,8 +956,8 @@ class TestLessonIntegration:
             data = section_response.json()
             assert data["total"] == 2
             assert len(data["lessons"]) == 2
-            
+
             # Verify all lessons belong to the correct section
             for lesson in data["lessons"]:
                 assert lesson["section_id"] == section.id
-                assert f"Section {i+1}" in lesson["title"]
+                assert f"Section {i + 1}" in lesson["title"]
