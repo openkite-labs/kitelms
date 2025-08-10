@@ -16,7 +16,7 @@ class TestListUsers:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         session.add(admin_user)
 
@@ -25,13 +25,13 @@ class TestListUsers:
             name="User One",
             email="user1@example.com",
             password=auth_methods.hash_password("password1"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         user2 = User(
             name="User Two",
             email="user2@example.com",
             password=auth_methods.hash_password("password2"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([user1, user2])
         session.commit()
@@ -71,7 +71,7 @@ class TestListUsers:
             name="Regular User",
             email="user@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add(user)
         session.commit()
@@ -104,7 +104,7 @@ class TestListUsers:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         session.add(admin_user)
 
@@ -114,7 +114,7 @@ class TestListUsers:
                 name=f"User {i}",
                 email=f"user{i}@example.com",
                 password=auth_methods.hash_password(f"password{i}"),
-                role=RoleEnum.USER
+                role=RoleEnum.USER,
             )
             session.add(user)
 
@@ -152,7 +152,7 @@ class TestListUsers:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         session.add(admin_user)
 
@@ -161,13 +161,13 @@ class TestListUsers:
             name="John Doe",
             email="john@example.com",
             password=auth_methods.hash_password("password1"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         user2 = User(
             name="Jane Smith",
             email="jane@example.com",
             password=auth_methods.hash_password("password2"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([user1, user2])
         session.commit()
@@ -205,7 +205,7 @@ class TestGetCurrentUserProfile:
             name="Test User",
             email="test@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add(user)
         session.commit()
@@ -269,7 +269,7 @@ class TestGetUserById:
             name="Test User",
             email="test@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add(user)
         session.commit()
@@ -303,13 +303,13 @@ class TestGetUserById:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         target_user = User(
             name="Target User",
             email="target@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([admin_user, target_user])
         session.commit()
@@ -344,13 +344,13 @@ class TestGetUserById:
             name="User One",
             email="user1@example.com",
             password=auth_methods.hash_password("password1"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         user2 = User(
             name="User Two",
             email="user2@example.com",
             password=auth_methods.hash_password("password2"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([user1, user2])
         session.commit()
@@ -383,7 +383,7 @@ class TestGetUserById:
             name="Test User",
             email="test@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add(user)
         session.commit()
@@ -417,7 +417,7 @@ class TestGetUserById:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         session.add(admin_user)
         session.commit()
@@ -454,7 +454,7 @@ class TestUpdateUser:
             name="Original Name",
             email="original@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add(user)
         session.commit()
@@ -473,10 +473,7 @@ class TestUpdateUser:
         app.dependency_overrides[auth_methods.get_current_user] = get_current_user_override
 
         client = TestClient(app)
-        update_data = {
-            "name": "Updated Name",
-            "email": "updated@example.com"
-        }
+        update_data = {"name": "Updated Name", "email": "updated@example.com"}
         response = client.patch(f"/users/{user.id}", json=update_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -492,13 +489,13 @@ class TestUpdateUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         target_user = User(
             name="Target User",
             email="target@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([admin_user, target_user])
         session.commit()
@@ -518,10 +515,7 @@ class TestUpdateUser:
         app.dependency_overrides[auth_methods.get_current_user] = get_current_user_override
 
         client = TestClient(app)
-        update_data = {
-            "name": "Updated by Admin",
-            "role": "admin"
-        }
+        update_data = {"name": "Updated by Admin", "role": "admin"}
         response = client.patch(f"/users/{target_user.id}", json=update_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -537,13 +531,13 @@ class TestUpdateUser:
             name="User One",
             email="user1@example.com",
             password=auth_methods.hash_password("password1"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         user2 = User(
             name="User Two",
             email="user2@example.com",
             password=auth_methods.hash_password("password2"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([user1, user2])
         session.commit()
@@ -580,13 +574,13 @@ class TestDeleteUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         target_user = User(
             name="Target User",
             email="target@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([admin_user, target_user])
         session.commit()
@@ -619,13 +613,13 @@ class TestDeleteUser:
             name="User One",
             email="user1@example.com",
             password=auth_methods.hash_password("password1"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         user2 = User(
             name="User Two",
             email="user2@example.com",
             password=auth_methods.hash_password("password2"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([user1, user2])
         session.commit()
@@ -658,7 +652,7 @@ class TestDeleteUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         session.add(admin_user)
         session.commit()
@@ -694,13 +688,13 @@ class TestBanUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         target_user = User(
             name="Target User",
             email="target@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([admin_user, target_user])
         session.commit()
@@ -735,13 +729,13 @@ class TestBanUser:
             name="User One",
             email="user1@example.com",
             password=auth_methods.hash_password("password1"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         user2 = User(
             name="User Two",
             email="user2@example.com",
             password=auth_methods.hash_password("password2"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([user1, user2])
         session.commit()
@@ -775,7 +769,7 @@ class TestBanUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         session.add(admin_user)
         session.commit()
@@ -812,14 +806,14 @@ class TestUnbanUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         banned_user = User(
             name="Banned User",
             email="banned@example.com",
             password=auth_methods.hash_password("password"),
             role=RoleEnum.USER,
-            is_deleted=True  # Already banned
+            is_deleted=True,  # Already banned
         )
         session.add_all([admin_user, banned_user])
         session.commit()
@@ -853,14 +847,14 @@ class TestUnbanUser:
             name="Regular User",
             email="user@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         banned_user = User(
             name="Banned User",
             email="banned@example.com",
             password=auth_methods.hash_password("password"),
             role=RoleEnum.USER,
-            is_deleted=True
+            is_deleted=True,
         )
         session.add_all([user, banned_user])
         session.commit()
@@ -893,14 +887,14 @@ class TestUnbanUser:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         regular_user = User(
             name="Regular User",
             email="regular@example.com",
             password=auth_methods.hash_password("password"),
             role=RoleEnum.USER,
-            is_deleted=False  # Not banned
+            is_deleted=False,  # Not banned
         )
         session.add_all([admin_user, regular_user])
         session.commit()
@@ -938,14 +932,14 @@ class TestUserIntegration:
             name="Admin User",
             email="admin@example.com",
             password=auth_methods.hash_password("adminpass"),
-            role=RoleEnum.ADMIN
+            role=RoleEnum.ADMIN,
         )
         # Create target user
         target_user = User(
             name="Target User",
             email="target@example.com",
             password=auth_methods.hash_password("password"),
-            role=RoleEnum.USER
+            role=RoleEnum.USER,
         )
         session.add_all([admin_user, target_user])
         session.commit()

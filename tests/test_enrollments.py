@@ -12,7 +12,7 @@ def test_course(session: Session, test_user):
         description="A test course for enrollment",
         price=99.99,
         is_published=True,
-        user_id=test_user.id
+        user_id=test_user.id,
     )
     session.add(course)
     session.commit()
@@ -23,11 +23,7 @@ def test_course(session: Session, test_user):
 def test_purchase_course_flow(auth_client, test_course):
     """Test the complete course purchase flow."""
     # Purchase course
-    purchase_data = {
-        "course_id": test_course.id,
-        "payment_method": "credit_card",
-        "transaction_id": "test_txn_123"
-    }
+    purchase_data = {"course_id": test_course.id, "payment_method": "credit_card", "transaction_id": "test_txn_123"}
 
     response = auth_client.post("/enrollments/purchase", json=purchase_data)
     assert response.status_code == 200
@@ -47,11 +43,7 @@ def test_check_enrollment(auth_client, test_course):
     assert response.json()["is_enrolled"] is False
 
     # Purchase course
-    purchase_data = {
-        "course_id": test_course.id,
-        "payment_method": "credit_card",
-        "transaction_id": "test_txn_456"
-    }
+    purchase_data = {"course_id": test_course.id, "payment_method": "credit_card", "transaction_id": "test_txn_456"}
 
     auth_client.post("/enrollments/purchase", json=purchase_data)
 
@@ -64,11 +56,7 @@ def test_check_enrollment(auth_client, test_course):
 def test_list_user_enrollments(auth_client, test_course):
     """Test listing user enrollments."""
     # Purchase course first
-    purchase_data = {
-        "course_id": test_course.id,
-        "payment_method": "credit_card",
-        "transaction_id": "test_txn_789"
-    }
+    purchase_data = {"course_id": test_course.id, "payment_method": "credit_card", "transaction_id": "test_txn_789"}
 
     auth_client.post("/enrollments/purchase", json=purchase_data)
 
@@ -84,11 +72,7 @@ def test_list_user_enrollments(auth_client, test_course):
 
 def test_create_billing_only(auth_client, test_course):
     """Test creating billing record without immediate enrollment."""
-    billing_data = {
-        "course_id": test_course.id,
-        "payment_method": "paypal",
-        "transaction_id": "test_billing_123"
-    }
+    billing_data = {"course_id": test_course.id, "payment_method": "paypal", "transaction_id": "test_billing_123"}
 
     response = auth_client.post("/enrollments/billing", json=billing_data)
     assert response.status_code == 200
@@ -104,7 +88,7 @@ def test_duplicate_purchase_prevention(auth_client, test_course):
     purchase_data = {
         "course_id": test_course.id,
         "payment_method": "credit_card",
-        "transaction_id": "test_duplicate_123"
+        "transaction_id": "test_duplicate_123",
     }
 
     # First purchase should succeed
@@ -125,7 +109,7 @@ def test_unpublished_course_purchase_prevention(auth_client, session: Session, t
         description="This course is not published",
         price=99.99,
         is_published=False,
-        user_id=test_user.id
+        user_id=test_user.id,
     )
     session.add(unpublished_course)
     session.commit()
@@ -134,7 +118,7 @@ def test_unpublished_course_purchase_prevention(auth_client, session: Session, t
     purchase_data = {
         "course_id": unpublished_course.id,
         "payment_method": "credit_card",
-        "transaction_id": "test_unpublished_123"
+        "transaction_id": "test_unpublished_123",
     }
 
     response = auth_client.post("/enrollments/purchase", json=purchase_data)
