@@ -257,6 +257,79 @@ This document lists all available API endpoints in the KiteLMS backend with thei
 
 No parameters required.
 
+## User Endpoints
+
+### `GET /users/`
+
+**Query Parameters:**
+
+- `skip`: integer (optional, default: 0) - Number of records to skip
+- `limit`: integer (optional, default: 10, max: 100) - Number of records to return
+- `search`: string (optional) - Search in user name or email
+- `role`: string (optional) - Filter by user role
+- `include_deleted`: boolean (optional, default: false) - Include deleted users
+
+**Note:** Only admins can access this endpoint.
+
+### `GET /users/{user_id}`
+
+**Path Parameters:**
+
+- `user_id`: string - User ID
+
+**Note:** Users can only access their own profile unless they are admin.
+
+### `PATCH /users/{user_id}`
+
+**Path Parameters:**
+
+- `user_id`: string - User ID
+
+**Body:**
+
+```json
+{
+  "name": "string (optional)",
+  "email": "string (optional)",
+  "password": "string (optional)",
+  "role": "string (optional)"
+}
+```
+
+**Note:** Users can only update their own profile unless they are admin.
+
+### `DELETE /users/{user_id}`
+
+**Path Parameters:**
+
+- `user_id`: string - User ID
+
+**Note:** Only admins can delete users.
+
+### `POST /users/{user_id}/ban`
+
+**Path Parameters:**
+
+- `user_id`: string - User ID
+
+**Body:**
+
+```json
+{
+  "reason": "string (optional)"
+}
+```
+
+**Note:** Only admins can ban users.
+
+### `POST /users/{user_id}/unban`
+
+**Path Parameters:**
+
+- `user_id`: string - User ID
+
+**Note:** Only admins can unban users.
+
 ## API Documentation
 
 ### `GET /scalar`
