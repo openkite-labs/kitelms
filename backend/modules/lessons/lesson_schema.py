@@ -8,6 +8,7 @@ class LessonCreate(BaseModel):
     content: Optional[str] = None
     video_url: Optional[str] = None
     order: int
+    section_id: str
 
 
 class LessonUpdate(BaseModel):
@@ -33,3 +34,13 @@ class LessonListResponse(BaseModel):
     total: int
     skip: int
     limit: int
+
+
+class LessonOrderItem(BaseModel):
+    id: str
+    order: int
+
+
+class LessonReorderRequest(BaseModel):
+    section_id: str
+    lesson_orders: List[LessonOrderItem]

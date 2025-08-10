@@ -9,6 +9,7 @@ class SectionCreate(BaseModel):
     name: str
     description: Optional[str] = None
     order: int
+    course_id: str
 
 
 class SectionUpdate(BaseModel):
@@ -43,6 +44,16 @@ class SectionListResponse(BaseModel):
     total: int
     skip: int
     limit: int
+
+
+class SectionOrderItem(BaseModel):
+    id: str
+    order: int
+
+
+class SectionReorderRequest(BaseModel):
+    course_id: str
+    section_orders: List[SectionOrderItem]
 
 
 # Update forward reference

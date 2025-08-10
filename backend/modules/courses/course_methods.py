@@ -65,10 +65,11 @@ def get_courses(
     limit: int = 10,
     user_id: Optional[str] = None,
     is_published: Optional[bool] = None,
-    category: Optional[str] = None
+    category: Optional[str] = None,
+    search_query: Optional[str] = None
 ) -> tuple[list[Course], int]:
     """
-    Get a list of courses with optional filtering and pagination.
+    Get a list of courses with optional filtering, search, and pagination.
     Returns tuple of (courses, total_count).
     """
     statement = select(Course).where(Course.is_deleted == False)
@@ -86,6 +87,17 @@ def get_courses(
     if category:
         statement = statement.where(Course.category == category)
         count_statement = count_statement.where(Course.category == category)
+
+    # Apply search filter
+    if search_query:
+        search_pattern = f"%{search_query}%"
+        search_condition = (
+            Course.name.ilike(search_pattern) |
+            Course.description.ilike(search_pattern) |
+            Course.tags.ilike(search_pattern)
+        )
+        statement = statement.where(search_condition)
+        count_statement = count_statement.where(search_condition)
 
     # Apply pagination
     statement = statement.offset(skip).limit(limit)

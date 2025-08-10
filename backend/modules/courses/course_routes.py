@@ -11,9 +11,6 @@ from backend.modules.courses.course_methods import (
     delete_course,
     get_course_by_id,
     get_courses,
-    get_published_courses,
-    get_user_courses,
-    search_courses,
     toggle_course_publication,
     update_course,
 )
@@ -43,76 +40,24 @@ async def list_courses(
     user_id: Optional[str] = Query(None),
     is_published: Optional[bool] = Query(None),
     category: Optional[str] = Query(None),
-    session: Session = Depends(db_session)
+    search: Optional[str] = Query(None),
+    my_courses: bool = Query(False),
+    session: Session = Depends(db_session),
+    current_user: Optional[str] = Depends(get_current_user)
 ):
-    """Get a list of courses with optional filtering."""
+    """Get a list of courses with optional filtering, search, and my_courses functionality."""
+    # If my_courses is True, filter by current user
+    filter_user_id = current_user if my_courses else user_id
+
     courses, total = get_courses(
         session,
         skip=skip,
         limit=limit,
-        user_id=user_id,
+        user_id=filter_user_id,
         is_published=is_published,
-        category=category
+        category=category,
+        search_query=search
     )
-
-    course_responses = [course_to_response(course) for course in courses]
-
-    return CourseListResponse(
-        courses=course_responses,
-        total=total,
-        page=skip // limit + 1,
-        per_page=limit
-    )
-
-
-@course_router.get("/published", response_model=CourseListResponse)
-async def list_published_courses(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
-    session: Session = Depends(db_session)
-):
-    """Get all published courses."""
-    courses, total = get_published_courses(session, skip=skip, limit=limit)
-
-    course_responses = [course_to_response(course) for course in courses]
-
-    return CourseListResponse(
-        courses=course_responses,
-        total=total,
-        page=skip // limit + 1,
-        per_page=limit
-    )
-
-
-@course_router.get("/my-courses", response_model=CourseListResponse)
-async def list_my_courses(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
-):
-    """Get courses created by the current user."""
-    courses, total = get_user_courses(session, current_user, skip=skip, limit=limit)
-
-    course_responses = [course_to_response(course) for course in courses]
-
-    return CourseListResponse(
-        courses=course_responses,
-        total=total,
-        page=skip // limit + 1,
-        per_page=limit
-    )
-
-
-@course_router.get("/search", response_model=CourseListResponse)
-async def search_courses_endpoint(
-    q: str = Query(..., min_length=1),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
-    session: Session = Depends(db_session)
-):
-    """Search courses by name, description, or tags."""
-    courses, total = search_courses(session, q, skip=skip, limit=limit)
 
     course_responses = [course_to_response(course) for course in courses]
 

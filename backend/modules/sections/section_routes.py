@@ -1,15 +1,15 @@
-from typing import List
+from typing import List, Optional
 
-from backend.utils.engine import db_session
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
 
+from backend.models.engine import db_session
 from backend.modules.auth.auth_methods import get_current_user
 from backend.modules.sections.section_methods import (
     create_section,
     delete_section,
     get_section_by_id,
-    get_sections_by_course,
+    get_sections,
     reorder_sections,
     section_to_response,
     section_with_lessons_to_response,
@@ -18,6 +18,7 @@ from backend.modules.sections.section_methods import (
 from backend.modules.sections.section_schema import (
     SectionCreate,
     SectionListResponse,
+    SectionReorderRequest,
     SectionResponse,
     SectionUpdate,
     SectionWithLessonsResponse,
@@ -26,9 +27,8 @@ from backend.modules.sections.section_schema import (
 section_router = APIRouter(prefix="/sections", tags=["sections"])
 
 
-@section_router.post("/course/{course_id}", response_model=SectionResponse)
+@section_router.post("/", response_model=SectionResponse)
 def create_section_endpoint(
-    course_id: str,
     section_data: SectionCreate,
     session: Session = Depends(db_session),
     current_user: str = Depends(get_current_user)
@@ -37,7 +37,7 @@ def create_section_endpoint(
     Create a new section for a specific course.
     """
     try:
-        section = create_section(session, section_data, course_id, current_user)
+        section = create_section(session, section_data, current_user)
         return section_to_response(section)
     except HTTPException:
         raise
@@ -45,18 +45,18 @@ def create_section_endpoint(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@section_router.get("/course/{course_id}", response_model=SectionListResponse)
-def get_course_sections(
-    course_id: str,
+@section_router.get("/", response_model=SectionListResponse)
+def get_sections_endpoint(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
+    course_id: Optional[str] = Query(None),
     session: Session = Depends(db_session)
 ):
     """
-    Get all sections for a specific course.
+    Get sections with optional filtering by course_id.
     """
     try:
-        sections, total = get_sections_by_course(session, course_id, skip, limit)
+        sections, total = get_sections(session, skip, limit, course_id)
         return SectionListResponse(
             sections=[section_to_response(section) for section in sections],
             total=total,
@@ -67,18 +67,18 @@ def get_course_sections(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@section_router.get("/course/{course_id}/with-lessons", response_model=List[SectionWithLessonsResponse])
-def get_course_sections_with_lessons(
-    course_id: str,
+@section_router.get("/with-lessons", response_model=List[SectionWithLessonsResponse])
+def get_sections_with_lessons_endpoint(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
+    course_id: Optional[str] = Query(None),
     session: Session = Depends(db_session)
 ):
     """
-    Get all sections for a specific course with their lessons.
+    Get sections with their lessons, optionally filtered by course_id.
     """
     try:
-        sections, _ = get_sections_by_course(session, course_id, skip, limit)
+        sections, _ = get_sections(session, skip, limit, course_id)
         return [section_with_lessons_to_response(section) for section in sections]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -153,19 +153,21 @@ def delete_section_endpoint(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@section_router.put("/course/{course_id}/reorder")
-def reorder_course_sections(
-    course_id: str,
-    section_orders: List[dict],
+@section_router.put("/reorder")
+def reorder_sections_endpoint(
+    reorder_data: SectionReorderRequest,
     session: Session = Depends(db_session),
     current_user: str = Depends(get_current_user)
 ):
     """
     Reorder sections within a course.
-    Expects a list of {"id": "section_id", "order": new_order}
+    Expects {"course_id": "course_id", "section_orders": [{"id": "section_id", "order": new_order}]}
     """
     try:
-        success = reorder_sections(session, course_id, section_orders, current_user)
+        # Convert Pydantic models to dict for the reorder_sections function
+        section_orders_dict = [item.dict() for item in reorder_data.section_orders]
+
+        success = reorder_sections(session, reorder_data.course_id, section_orders_dict, current_user)
         if not success:
             raise HTTPException(status_code=400, detail="Failed to reorder sections")
         return {"message": "Sections reordered successfully"}

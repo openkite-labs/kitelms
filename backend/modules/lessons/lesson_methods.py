@@ -24,13 +24,13 @@ def lesson_to_response(lesson) -> LessonResponse:
 
 
 # Lesson CRUD operations
-def create_lesson(session: Session, lesson_data: LessonCreate, section_id: str, user_id: str) -> Lesson:
+def create_lesson(session: Session, lesson_data: LessonCreate, user_id: str) -> Lesson:
     """
     Create a new lesson for a specific section.
     """
     # Check if user owns the course through section
     section_statement = select(Section).where(
-        Section.id == section_id,
+        Section.id == lesson_data.section_id,
         Section.is_deleted == False
     )
     section = session.exec(section_statement).first()
@@ -49,7 +49,7 @@ def create_lesson(session: Session, lesson_data: LessonCreate, section_id: str, 
         content=lesson_data.content,
         video_url=lesson_data.video_url,
         order=lesson_data.order,
-        section_id=section_id
+        section_id=lesson_data.section_id
     )
 
     session.add(lesson)
@@ -69,6 +69,31 @@ def get_lesson_by_id(session: Session, lesson_id: str) -> Optional[Lesson]:
     return session.exec(statement).first()
 
 
+def get_lessons(
+    session: Session,
+    skip: int = 0,
+    limit: int = 10,
+    section_id: Optional[str] = None
+) -> tuple[list[Lesson], int]:
+    """
+    Get lessons with optional filtering by section_id.
+    """
+    statement = select(Lesson).where(Lesson.is_deleted == False)
+    count_statement = select(func.count(Lesson.id)).where(Lesson.is_deleted == False)
+
+    # Apply section filter if provided
+    if section_id:
+        statement = statement.where(Lesson.section_id == section_id)
+        count_statement = count_statement.where(Lesson.section_id == section_id)
+
+    statement = statement.order_by(Lesson.order).offset(skip).limit(limit)
+
+    lessons = session.exec(statement).all()
+    total = session.exec(count_statement).one()
+
+    return lessons, total
+
+
 def get_lessons_by_section(
     session: Session,
     section_id: str,
@@ -77,21 +102,9 @@ def get_lessons_by_section(
 ) -> tuple[list[Lesson], int]:
     """
     Get all lessons for a specific section.
+    Deprecated: Use get_lessons with section_id parameter instead.
     """
-    statement = select(Lesson).where(
-        Lesson.section_id == section_id,
-        Lesson.is_deleted == False
-    ).order_by(Lesson.order).offset(skip).limit(limit)
-
-    count_statement = select(func.count(Lesson.id)).where(
-        Lesson.section_id == section_id,
-        Lesson.is_deleted == False
-    )
-
-    lessons = session.exec(statement).all()
-    total = session.exec(count_statement).one()
-
-    return lessons, total
+    return get_lessons(session, skip, limit, section_id)
 
 
 def update_lesson(

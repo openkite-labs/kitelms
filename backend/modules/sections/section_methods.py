@@ -43,13 +43,13 @@ def section_with_lessons_to_response(section) -> SectionWithLessonsResponse:
 
 
 # Section CRUD operations
-def create_section(session: Session, section_data: SectionCreate, course_id: str, user_id: str) -> Section:
+def create_section(session: Session, section_data: SectionCreate, user_id: str) -> Section:
     """
     Create a new section for a specific course.
     """
     # Check if user owns the course
     course_statement = select(Course).where(
-        Course.id == course_id,
+        Course.id == section_data.course_id,
         Course.is_deleted == False
     )
     course = session.exec(course_statement).first()
@@ -64,7 +64,7 @@ def create_section(session: Session, section_data: SectionCreate, course_id: str
         name=section_data.name,
         description=section_data.description,
         order=section_data.order,
-        course_id=course_id
+        course_id=section_data.course_id
     )
 
     session.add(section)
@@ -84,6 +84,30 @@ def get_section_by_id(session: Session, section_id: str) -> Optional[Section]:
     return session.exec(statement).first()
 
 
+def get_sections(
+    session: Session,
+    skip: int = 0,
+    limit: int = 10,
+    course_id: Optional[str] = None
+) -> tuple[list[Section], int]:
+    """
+    Get sections with optional filtering by course_id.
+    """
+    statement = select(Section).where(Section.is_deleted == False)
+    count_statement = select(func.count(Section.id)).where(Section.is_deleted == False)
+
+    if course_id:
+        statement = statement.where(Section.course_id == course_id)
+        count_statement = count_statement.where(Section.course_id == course_id)
+
+    statement = statement.order_by(Section.order).offset(skip).limit(limit)
+
+    sections = session.exec(statement).all()
+    total = session.exec(count_statement).one()
+
+    return sections, total
+
+
 def get_sections_by_course(
     session: Session,
     course_id: str,
@@ -92,21 +116,9 @@ def get_sections_by_course(
 ) -> tuple[list[Section], int]:
     """
     Get all sections for a specific course.
+    Deprecated: Use get_sections with course_id parameter instead.
     """
-    statement = select(Section).where(
-        Section.course_id == course_id,
-        Section.is_deleted == False
-    ).order_by(Section.order).offset(skip).limit(limit)
-
-    count_statement = select(func.count(Section.id)).where(
-        Section.course_id == course_id,
-        Section.is_deleted == False
-    )
-
-    sections = session.exec(statement).all()
-    total = session.exec(count_statement).one()
-
-    return sections, total
+    return get_sections(session, skip, limit, course_id)
 
 
 def update_section(
