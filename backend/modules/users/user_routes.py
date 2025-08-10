@@ -54,6 +54,23 @@ async def list_users(
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@user_router.get("/me", response_model=UserResponse)
+async def get_current_user_profile(
+    session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
+):
+    """Get the current user's profile data."""
+    try:
+        user = get_user_by_id(session, current_user)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        return user_to_response(user)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @user_router.get("/{user_id}", response_model=UserResponse)
 async def get_user(user_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)):
     """Get a user by ID. Users can only access their own profile unless they are admin."""
