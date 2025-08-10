@@ -18,6 +18,8 @@ class User(BaseModel, table=True):
 
     courses: list["Course"] = Relationship(back_populates="user")
     discussions: list["Discussion"] = Relationship(back_populates="user")
+    posts: list["Post"] = Relationship(back_populates="user")
+    comments: list["Comment"] = Relationship(back_populates="user")
 
 
 class AppSettings(BaseModel, table=True):
@@ -107,3 +109,23 @@ class Enrollment(BaseModel, table=True):
     user: User = Relationship()
     course: Course = Relationship()
     billing: Billing = Relationship()
+
+
+class Post(BaseModel, table=True):
+    content: str
+    image_url: str = Field(default="")
+
+    user_id: str = Field(foreign_key="user.id")
+    user: User = Relationship(back_populates="posts")
+
+    comments: list["Comment"] = Relationship(back_populates="post")
+
+
+class Comment(BaseModel, table=True):
+    content: str
+
+    post_id: str = Field(foreign_key="post.id")
+    post: Post = Relationship(back_populates="comments")
+
+    user_id: str = Field(foreign_key="user.id")
+    user: User = Relationship(back_populates="comments")

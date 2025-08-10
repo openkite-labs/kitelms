@@ -40,6 +40,20 @@ def client_fixture(session: Session):
     app.dependency_overrides.clear()
 
 
+@pytest.fixture(name="unauthorized_client")
+def unauthorized_client_fixture(session: Session):
+    """Create a test client without authentication override for testing unauthorized access"""
+
+    def get_session_override():
+        return session
+
+    app.dependency_overrides[db_session] = get_session_override
+    # Don't override get_current_user to test actual authentication
+    client = TestClient(app)
+    yield client
+    app.dependency_overrides.clear()
+
+
 @pytest.fixture
 def test_user_data():
     """Sample user data for testing"""
