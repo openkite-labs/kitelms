@@ -251,12 +251,6 @@ This document lists all available API endpoints in the KiteLMS backend with thei
 }
 ```
 
-## Health Check
-
-### `GET /health`
-
-No parameters required.
-
 ## User Endpoints
 
 ### `GET /users/`
@@ -329,9 +323,3 @@ No parameters required.
 - `user_id`: string - User ID
 
 **Note:** Only admins can unban users.
-
-## API Documentation
-
-### `GET /scalar`
-
-Scalar API documentation interface. No parameters required.
