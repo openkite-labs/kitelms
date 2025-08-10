@@ -67,6 +67,30 @@ def get_sections_endpoint(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@section_router.put("/reorder")
+def reorder_sections_endpoint(
+    reorder_data: SectionReorderRequest,
+    session: Session = Depends(db_session),
+    current_user: str = Depends(get_current_user)
+):
+    """
+    Reorder sections within a course.
+    Expects {"course_id": "course_id", "section_orders": [{"id": "section_id", "order": new_order}]}
+    """
+    try:
+        # Convert Pydantic models to dict for the reorder_sections function
+        section_orders_dict = [item.dict() for item in reorder_data.section_orders]
+
+        success = reorder_sections(session, reorder_data.course_id, section_orders_dict, current_user)
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to reorder sections")
+        return {"message": "Sections reordered successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @section_router.get("/{section_id}/with-lessons", response_model=SectionWithLessonsResponse)
 def get_section_with_lessons(
     section_id: str,
@@ -116,30 +140,6 @@ def delete_section_endpoint(
         if not success:
             raise HTTPException(status_code=404, detail="Section not found")
         return {"message": "Section deleted successfully"}
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@section_router.put("/reorder")
-def reorder_sections_endpoint(
-    reorder_data: SectionReorderRequest,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
-):
-    """
-    Reorder sections within a course.
-    Expects {"course_id": "course_id", "section_orders": [{"id": "section_id", "order": new_order}]}
-    """
-    try:
-        # Convert Pydantic models to dict for the reorder_sections function
-        section_orders_dict = [item.dict() for item in reorder_data.section_orders]
-
-        success = reorder_sections(session, reorder_data.course_id, section_orders_dict, current_user)
-        if not success:
-            raise HTTPException(status_code=400, detail="Failed to reorder sections")
-        return {"message": "Sections reordered successfully"}
     except HTTPException:
         raise
     except Exception as e:
