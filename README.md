@@ -323,3 +323,59 @@ This document lists all available API endpoints in the KiteLMS backend with thei
 - `user_id`: string - User ID
 
 **Note:** Only admins can unban users.
+
+## Discussion Endpoints
+
+### `POST /discussions/`
+
+**Body:**
+
+```json
+{
+  "content": "string",
+  "lesson_id": "string"
+}
+```
+
+### `GET /discussions/`
+
+**Query Parameters:**
+
+- `skip`: integer (optional, default: 0) - Number of records to skip
+- `limit`: integer (optional, default: 10, max: 100) - Number of records to return
+- `lesson_id`: string (optional) - Filter by lesson ID
+- `include_user_info`: boolean (optional, default: false) - Include user name and email in response
+
+### `GET /discussions/{discussion_id}`
+
+**Path Parameters:**
+
+- `discussion_id`: string - Discussion ID
+
+**Query Parameters:**
+
+- `include_user_info`: boolean (optional, default: false) - Include user name and email in response
+
+### `PUT /discussions/{discussion_id}`
+
+**Path Parameters:**
+
+- `discussion_id`: string - Discussion ID
+
+**Body:**
+
+```json
+{
+  "content": "string (optional)"
+}
+```
+
+**Note:** Only the author can update their discussion.
+
+### `DELETE /discussions/{discussion_id}`
+
+**Path Parameters:**
+
+- `discussion_id`: string - Discussion ID
+
+**Note:** Only the author can delete their discussion.
