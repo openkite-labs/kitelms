@@ -1,6 +1,6 @@
 from typing import Optional
 
-from backend.utils.engine import db_session
+from backend.models.engine import db_session
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
 
