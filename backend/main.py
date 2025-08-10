@@ -7,6 +7,7 @@ from backend.modules.auth.auth_routes import auth_router
 from backend.modules.courses.course_routes import course_router
 from backend.modules.lessons.lesson_routes import lesson_router
 from backend.modules.sections.section_routes import section_router
+from backend.modules.users.user_routes import user_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -30,6 +31,7 @@ app.include_router(auth_router)
 app.include_router(course_router)
 app.include_router(section_router)
 app.include_router(lesson_router)
+app.include_router(user_router)
 
 
 @app.get("/health")
