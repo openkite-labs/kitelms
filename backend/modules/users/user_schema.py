@@ -5,13 +5,6 @@ from pydantic import BaseModel
 from backend.models.database import RoleEnum
 
 
-class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str
-    role: Optional[RoleEnum] = RoleEnum.USER
-
-
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None

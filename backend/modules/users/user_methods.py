@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from sqlmodel import Session, func, select
 
 from backend.models.database import User
-from backend.modules.users.user_schema import UserCreate, UserResponse, UserUpdate
+from backend.modules.users.user_schema import UserResponse, UserUpdate
 
 
 def user_to_response(user: User) -> UserResponse:
@@ -19,28 +19,6 @@ def user_to_response(user: User) -> UserResponse:
         updated_at=user.updated_at.isoformat(),
         is_deleted=user.is_deleted
     )
-
-
-def create_user(session: Session, user_data: UserCreate) -> User:
-    """
-    Create a new user.
-    """
-    # Check if email already exists
-    existing_user = session.exec(select(User).where(User.email == user_data.email, User.is_deleted == False)).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    user = User(
-        name=user_data.name,
-        email=user_data.email,
-        password=user_data.password,  # Note: In production, hash the password
-        role=user_data.role
-    )
-
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
 
 
 def get_user_by_id(session: Session, user_id: str) -> Optional[User]:

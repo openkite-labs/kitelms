@@ -7,7 +7,6 @@ from backend.models.engine import db_session
 from backend.modules.auth.auth_methods import get_current_user
 from backend.modules.users.user_methods import (
     ban_user,
-    create_user,
     delete_user,
     get_user_by_id,
     get_users,
@@ -17,34 +16,12 @@ from backend.modules.users.user_methods import (
 )
 from backend.modules.users.user_schema import (
     UserBanRequest,
-    UserCreate,
     UserListResponse,
     UserResponse,
     UserUpdate,
 )
 
 user_router = APIRouter(prefix="/users", tags=["users"])
-
-
-@user_router.post("/", response_model=UserResponse)
-async def create_new_user(
-    user_data: UserCreate,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
-):
-    """Create a new user. Only admins can create users."""
-    try:
-        # Check if current user is admin
-        current_user_obj = get_user_by_id(session, current_user)
-        if not current_user_obj or current_user_obj.role != "admin":
-            raise HTTPException(status_code=403, detail="Only admins can create users")
-
-        user = create_user(session, user_data)
-        return user_to_response(user)
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
 
 
 @user_router.get("/", response_model=UserListResponse)
