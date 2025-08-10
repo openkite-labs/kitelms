@@ -17,10 +17,10 @@ def discussion_to_response(discussion, include_user_info: bool = False) -> Discu
         "lesson_id": discussion.lesson_id,
         "user_id": discussion.user_id,
         "created_at": discussion.created_at.isoformat(),
-        "updated_at": discussion.updated_at.isoformat()
+        "updated_at": discussion.updated_at.isoformat(),
     }
 
-    if include_user_info and hasattr(discussion, 'user') and discussion.user:
+    if include_user_info and hasattr(discussion, "user") and discussion.user:
         response_data["user_name"] = discussion.user.name
         response_data["user_email"] = discussion.user.email
 
@@ -33,20 +33,13 @@ def create_discussion(session: Session, discussion_data: DiscussionCreate, user_
     Create a new discussion for a specific lesson.
     """
     # Check if lesson exists
-    lesson_statement = select(Lesson).where(
-        Lesson.id == discussion_data.lesson_id,
-        Lesson.is_deleted == False
-    )
+    lesson_statement = select(Lesson).where(Lesson.id == discussion_data.lesson_id, Lesson.is_deleted == False)
     lesson = session.exec(lesson_statement).first()
 
     if not lesson:
         raise HTTPException(status_code=404, detail="Lesson not found")
 
-    discussion = Discussion(
-        content=discussion_data.content,
-        lesson_id=discussion_data.lesson_id,
-        user_id=user_id
-    )
+    discussion = Discussion(content=discussion_data.content, lesson_id=discussion_data.lesson_id, user_id=user_id)
 
     session.add(discussion)
     session.commit()
@@ -58,19 +51,12 @@ def get_discussion_by_id(session: Session, discussion_id: str) -> Optional[Discu
     """
     Get a discussion by its ID.
     """
-    statement = select(Discussion).where(
-        Discussion.id == discussion_id,
-        Discussion.is_deleted == False
-    )
+    statement = select(Discussion).where(Discussion.id == discussion_id, Discussion.is_deleted == False)
     return session.exec(statement).first()
 
 
 def get_discussions(
-    session: Session,
-    skip: int = 0,
-    limit: int = 10,
-    lesson_id: Optional[str] = None,
-    include_user_info: bool = False
+    session: Session, skip: int = 0, limit: int = 10, lesson_id: Optional[str] = None, include_user_info: bool = False
 ) -> tuple[list[Discussion], int]:
     """
     Get discussions with optional filtering by lesson_id.
@@ -95,10 +81,7 @@ def get_discussions(
 
 
 def get_discussions_by_lesson(
-    session: Session,
-    lesson_id: str,
-    skip: int = 0,
-    limit: int = 10
+    session: Session, lesson_id: str, skip: int = 0, limit: int = 10
 ) -> tuple[list[Discussion], int]:
     """
     Get discussions for a specific lesson.
@@ -107,18 +90,12 @@ def get_discussions_by_lesson(
 
 
 def update_discussion(
-    session: Session,
-    discussion_id: str,
-    discussion_data: DiscussionUpdate,
-    user_id: str
+    session: Session, discussion_id: str, discussion_data: DiscussionUpdate, user_id: str
 ) -> Optional[Discussion]:
     """
     Update a discussion. Only the author can update their discussion.
     """
-    statement = select(Discussion).where(
-        Discussion.id == discussion_id,
-        Discussion.is_deleted == False
-    )
+    statement = select(Discussion).where(Discussion.id == discussion_id, Discussion.is_deleted == False)
     discussion = session.exec(statement).first()
 
     if not discussion:
@@ -143,10 +120,7 @@ def delete_discussion(session: Session, discussion_id: str, user_id: str) -> boo
     """
     Delete a discussion (soft delete). Only the author can delete their discussion.
     """
-    statement = select(Discussion).where(
-        Discussion.id == discussion_id,
-        Discussion.is_deleted == False
-    )
+    statement = select(Discussion).where(Discussion.id == discussion_id, Discussion.is_deleted == False)
     discussion = session.exec(statement).first()
 
     if not discussion:

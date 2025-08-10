@@ -80,6 +80,30 @@ class Discussion(BaseModel, table=True):
     user: User = Relationship(back_populates="discussions")
 
 
+class BillingStatus(str, Enum):
+    PENDING = "pending"
+    PAID = "paid"
+    FAILED = "failed"
+    REFUNDED = "refunded"
+
+
+class Billing(BaseModel, table=True):
+    user_id: str = Field(foreign_key="user.id")
+    course_id: str = Field(foreign_key="course.id")
+    amount: float
+    status: BillingStatus = Field(default=BillingStatus.PENDING)
+    payment_method: str = Field(default="")
+    transaction_id: str = Field(default="")
+
+    user: User = Relationship()
+    course: Course = Relationship()
+
+
 class Enrollment(BaseModel, table=True):
     user_id: str = Field(foreign_key="user.id")
     course_id: str = Field(foreign_key="course.id")
+    billing_id: str = Field(foreign_key="billing.id")
+
+    user: User = Relationship()
+    course: Course = Relationship()
+    billing: Billing = Relationship()

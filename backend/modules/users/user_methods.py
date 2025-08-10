@@ -17,7 +17,7 @@ def user_to_response(user: User) -> UserResponse:
         role=user.role,
         created_at=user.created_at.isoformat(),
         updated_at=user.updated_at.isoformat(),
-        is_deleted=user.is_deleted
+        is_deleted=user.is_deleted,
     )
 
 
@@ -35,7 +35,7 @@ def get_users(
     limit: int = 10,
     search_query: Optional[str] = None,
     role: Optional[str] = None,
-    include_deleted: bool = False
+    include_deleted: bool = False,
 ) -> tuple[list[User], int]:
     """
     Get a list of users with optional filtering and search.
@@ -52,10 +52,7 @@ def get_users(
 
     # Search functionality
     if search_query:
-        search_filter = (
-            User.name.contains(search_query) |
-            User.email.contains(search_query)
-        )
+        search_filter = User.name.contains(search_query) | User.email.contains(search_query)
         query = query.where(search_filter)
 
     # Get total count
@@ -76,12 +73,7 @@ def get_users(
     return users, total
 
 
-def update_user(
-    session: Session,
-    user_id: str,
-    user_data: UserUpdate,
-    current_user_id: str
-) -> Optional[User]:
+def update_user(session: Session, user_id: str, user_data: UserUpdate, current_user_id: str) -> Optional[User]:
     """
     Update a user. Users can only update their own profile unless they are admin.
     """

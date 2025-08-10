@@ -24,7 +24,7 @@ def section_to_response(section) -> SectionResponse:
         order=section.order,
         course_id=section.course_id,
         created_at=section.created_at.isoformat(),
-        updated_at=section.updated_at.isoformat()
+        updated_at=section.updated_at.isoformat(),
     )
 
 
@@ -38,7 +38,7 @@ def section_with_lessons_to_response(section) -> SectionWithLessonsResponse:
         course_id=section.course_id,
         created_at=section.created_at.isoformat(),
         updated_at=section.updated_at.isoformat(),
-        lessons=[lesson_to_response(lesson) for lesson in section.lessons]
+        lessons=[lesson_to_response(lesson) for lesson in section.lessons],
     )
 
 
@@ -48,10 +48,7 @@ def create_section(session: Session, section_data: SectionCreate, user_id: str) 
     Create a new section for a specific course.
     """
     # Check if user owns the course
-    course_statement = select(Course).where(
-        Course.id == section_data.course_id,
-        Course.is_deleted == False
-    )
+    course_statement = select(Course).where(Course.id == section_data.course_id, Course.is_deleted == False)
     course = session.exec(course_statement).first()
 
     if not course:
@@ -64,7 +61,7 @@ def create_section(session: Session, section_data: SectionCreate, user_id: str) 
         name=section_data.name,
         description=section_data.description,
         order=section_data.order,
-        course_id=section_data.course_id
+        course_id=section_data.course_id,
     )
 
     session.add(section)
@@ -77,18 +74,12 @@ def get_section_by_id(session: Session, section_id: str) -> Optional[Section]:
     """
     Get a section by its ID.
     """
-    statement = select(Section).where(
-        Section.id == section_id,
-        Section.is_deleted == False
-    )
+    statement = select(Section).where(Section.id == section_id, Section.is_deleted == False)
     return session.exec(statement).first()
 
 
 def get_sections(
-    session: Session,
-    skip: int = 0,
-    limit: int = 10,
-    course_id: Optional[str] = None
+    session: Session, skip: int = 0, limit: int = 10, course_id: Optional[str] = None
 ) -> tuple[list[Section], int]:
     """
     Get sections with optional filtering by course_id.
@@ -109,10 +100,7 @@ def get_sections(
 
 
 def get_sections_by_course(
-    session: Session,
-    course_id: str,
-    skip: int = 0,
-    limit: int = 10
+    session: Session, course_id: str, skip: int = 0, limit: int = 10
 ) -> tuple[list[Section], int]:
     """
     Get all sections for a specific course.
@@ -121,12 +109,7 @@ def get_sections_by_course(
     return get_sections(session, skip, limit, course_id)
 
 
-def update_section(
-    session: Session,
-    section_id: str,
-    section_data: SectionUpdate,
-    user_id: str
-) -> Optional[Section]:
+def update_section(session: Session, section_id: str, section_data: SectionUpdate, user_id: str) -> Optional[Section]:
     """
     Update a section. Only the course owner can update it.
     """
@@ -186,10 +169,7 @@ def reorder_sections(session: Session, course_id: str, section_orders: list[dict
     section_orders should be a list of {"id": "section_id", "order": new_order}
     """
     # Check if user owns the course
-    course_statement = select(Course).where(
-        Course.id == course_id,
-        Course.is_deleted == False
-    )
+    course_statement = select(Course).where(Course.id == course_id, Course.is_deleted == False)
     course = session.exec(course_statement).first()
 
     if not course:
@@ -200,9 +180,7 @@ def reorder_sections(session: Session, course_id: str, section_orders: list[dict
 
     for section_order in section_orders:
         section_statement = select(Section).where(
-            Section.id == section_order["id"],
-            Section.course_id == course_id,
-            Section.is_deleted == False
+            Section.id == section_order["id"], Section.course_id == course_id, Section.is_deleted == False
         )
         section = session.exec(section_statement).first()
 

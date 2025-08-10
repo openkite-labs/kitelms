@@ -19,7 +19,7 @@ def lesson_to_response(lesson) -> LessonResponse:
         order=lesson.order,
         section_id=lesson.section_id,
         created_at=lesson.created_at.isoformat(),
-        updated_at=lesson.updated_at.isoformat()
+        updated_at=lesson.updated_at.isoformat(),
     )
 
 
@@ -29,10 +29,7 @@ def create_lesson(session: Session, lesson_data: LessonCreate, user_id: str) -> 
     Create a new lesson for a specific section.
     """
     # Check if user owns the course through section
-    section_statement = select(Section).where(
-        Section.id == lesson_data.section_id,
-        Section.is_deleted == False
-    )
+    section_statement = select(Section).where(Section.id == lesson_data.section_id, Section.is_deleted == False)
     section = session.exec(section_statement).first()
 
     if not section:
@@ -49,7 +46,7 @@ def create_lesson(session: Session, lesson_data: LessonCreate, user_id: str) -> 
         content=lesson_data.content,
         video_url=lesson_data.video_url,
         order=lesson_data.order,
-        section_id=lesson_data.section_id
+        section_id=lesson_data.section_id,
     )
 
     session.add(lesson)
@@ -62,18 +59,12 @@ def get_lesson_by_id(session: Session, lesson_id: str) -> Optional[Lesson]:
     """
     Get a lesson by its ID.
     """
-    statement = select(Lesson).where(
-        Lesson.id == lesson_id,
-        Lesson.is_deleted == False
-    )
+    statement = select(Lesson).where(Lesson.id == lesson_id, Lesson.is_deleted == False)
     return session.exec(statement).first()
 
 
 def get_lessons(
-    session: Session,
-    skip: int = 0,
-    limit: int = 10,
-    section_id: Optional[str] = None
+    session: Session, skip: int = 0, limit: int = 10, section_id: Optional[str] = None
 ) -> tuple[list[Lesson], int]:
     """
     Get lessons with optional filtering by section_id.
@@ -95,10 +86,7 @@ def get_lessons(
 
 
 def get_lessons_by_section(
-    session: Session,
-    section_id: str,
-    skip: int = 0,
-    limit: int = 10
+    session: Session, section_id: str, skip: int = 0, limit: int = 10
 ) -> tuple[list[Lesson], int]:
     """
     Get all lessons for a specific section.
@@ -107,12 +95,7 @@ def get_lessons_by_section(
     return get_lessons(session, skip, limit, section_id)
 
 
-def update_lesson(
-    session: Session,
-    lesson_id: str,
-    lesson_data: LessonUpdate,
-    user_id: str
-) -> Optional[Lesson]:
+def update_lesson(session: Session, lesson_id: str, lesson_data: LessonUpdate, user_id: str) -> Optional[Lesson]:
     """
     Update a lesson. Only the course owner can update it.
     """
@@ -184,10 +167,7 @@ def reorder_lessons(session: Session, section_id: str, lesson_orders: list[dict]
     lesson_orders should be a list of {"id": "lesson_id", "order": new_order}
     """
     # Check if user owns the course through section
-    section_statement = select(Section).where(
-        Section.id == section_id,
-        Section.is_deleted == False
-    )
+    section_statement = select(Section).where(Section.id == section_id, Section.is_deleted == False)
     section = session.exec(section_statement).first()
 
     if not section:
@@ -201,9 +181,7 @@ def reorder_lessons(session: Session, section_id: str, lesson_orders: list[dict]
 
     for lesson_order in lesson_orders:
         lesson_statement = select(Lesson).where(
-            Lesson.id == lesson_order["id"],
-            Lesson.section_id == section_id,
-            Lesson.is_deleted == False
+            Lesson.id == lesson_order["id"], Lesson.section_id == section_id, Lesson.is_deleted == False
         )
         lesson = session.exec(lesson_statement).first()
 

@@ -22,7 +22,7 @@ def course_to_response(course) -> CourseResponse:
         is_published=course.is_published,
         user_id=course.user_id,
         created_at=course.created_at.isoformat(),
-        updated_at=course.updated_at.isoformat()
+        updated_at=course.updated_at.isoformat(),
     )
 
 
@@ -39,7 +39,7 @@ def create_course(session: Session, course_data: CourseCreate, user_id: str) -> 
         category=course_data.category,
         tags=course_data.tags,
         is_published=course_data.is_published,
-        user_id=user_id
+        user_id=user_id,
     )
 
     session.add(course)
@@ -52,10 +52,7 @@ def get_course_by_id(session: Session, course_id: str) -> Optional[Course]:
     """
     Get a course by its ID.
     """
-    statement = select(Course).where(
-        Course.id == course_id,
-        Course.is_deleted == False
-    )
+    statement = select(Course).where(Course.id == course_id, Course.is_deleted == False)
     return session.exec(statement).first()
 
 
@@ -66,7 +63,7 @@ def get_courses(
     user_id: Optional[str] = None,
     is_published: Optional[bool] = None,
     category: Optional[str] = None,
-    search_query: Optional[str] = None
+    search_query: Optional[str] = None,
 ) -> tuple[list[Course], int]:
     """
     Get a list of courses with optional filtering, search, and pagination.
@@ -92,9 +89,9 @@ def get_courses(
     if search_query:
         search_pattern = f"%{search_query}%"
         search_condition = (
-            Course.name.ilike(search_pattern) |
-            Course.description.ilike(search_pattern) |
-            Course.tags.ilike(search_pattern)
+            Course.name.ilike(search_pattern)
+            | Course.description.ilike(search_pattern)
+            | Course.tags.ilike(search_pattern)
         )
         statement = statement.where(search_condition)
         count_statement = count_statement.where(search_condition)
@@ -108,12 +105,7 @@ def get_courses(
     return courses, total
 
 
-def update_course(
-    session: Session,
-    course_id: str,
-    course_data: CourseUpdate,
-    user_id: str
-) -> Optional[Course]:
+def update_course(session: Session, course_id: str, course_data: CourseUpdate, user_id: str) -> Optional[Course]:
     """
     Update a course. Only the course owner can update it.
     """
@@ -175,35 +167,35 @@ def get_published_courses(session: Session, skip: int = 0, limit: int = 10) -> t
     return get_courses(session, skip=skip, limit=limit, is_published=True)
 
 
-def search_courses(
-    session: Session,
-    query: str,
-    skip: int = 0,
-    limit: int = 10
-) -> tuple[list[Course], int]:
+def search_courses(session: Session, query: str, skip: int = 0, limit: int = 10) -> tuple[list[Course], int]:
     """
     Search courses by name, description, or tags.
     """
     search_pattern = f"%{query}%"
 
-    statement = select(Course).where(
-        Course.is_deleted == False,
-        Course.is_published == True,
-        (
-            Course.name.ilike(search_pattern) |
-            Course.description.ilike(search_pattern) |
-            Course.tags.ilike(search_pattern)
+    statement = (
+        select(Course)
+        .where(
+            Course.is_deleted == False,
+            Course.is_published == True,
+            (
+                Course.name.ilike(search_pattern)
+                | Course.description.ilike(search_pattern)
+                | Course.tags.ilike(search_pattern)
+            ),
         )
-    ).offset(skip).limit(limit)
+        .offset(skip)
+        .limit(limit)
+    )
 
     count_statement = select(func.count(Course.id)).where(
         Course.is_deleted == False,
         Course.is_published == True,
         (
-            Course.name.ilike(search_pattern) |
-            Course.description.ilike(search_pattern) |
-            Course.tags.ilike(search_pattern)
-        )
+            Course.name.ilike(search_pattern)
+            | Course.description.ilike(search_pattern)
+            | Course.tags.ilike(search_pattern)
+        ),
     )
 
     courses = session.exec(statement).all()

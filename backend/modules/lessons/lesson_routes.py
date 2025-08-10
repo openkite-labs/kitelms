@@ -27,9 +27,7 @@ lesson_router = APIRouter(prefix="/lessons", tags=["lessons"])
 
 @lesson_router.post("/", response_model=LessonResponse)
 def create_lesson_endpoint(
-    lesson_data: LessonCreate,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    lesson_data: LessonCreate, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """
     Create a new lesson. Section ID should be provided in the request body.
@@ -48,7 +46,7 @@ def get_lessons_endpoint(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
     section_id: Optional[str] = Query(None),
-    session: Session = Depends(db_session)
+    session: Session = Depends(db_session),
 ):
     """
     Get lessons with optional filtering by section_id.
@@ -56,10 +54,7 @@ def get_lessons_endpoint(
     try:
         lessons, total = get_lessons(session, skip, limit, section_id)
         return LessonListResponse(
-            lessons=[lesson_to_response(lesson) for lesson in lessons],
-            total=total,
-            skip=skip,
-            limit=limit
+            lessons=[lesson_to_response(lesson) for lesson in lessons], total=total, skip=skip, limit=limit
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -69,7 +64,7 @@ def get_lessons_endpoint(
 def reorder_lessons_endpoint(
     reorder_data: LessonReorderRequest,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """
     Reorder lessons within a section.
@@ -90,10 +85,7 @@ def reorder_lessons_endpoint(
 
 
 @lesson_router.get("/{lesson_id}", response_model=LessonResponse)
-def get_lesson(
-    lesson_id: str,
-    session: Session = Depends(db_session)
-):
+def get_lesson(lesson_id: str, session: Session = Depends(db_session)):
     """
     Get a specific lesson by ID.
     """
@@ -108,7 +100,7 @@ def update_lesson_endpoint(
     lesson_id: str,
     lesson_data: LessonUpdate,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """
     Update a specific lesson.
@@ -126,9 +118,7 @@ def update_lesson_endpoint(
 
 @lesson_router.delete("/{lesson_id}")
 def delete_lesson_endpoint(
-    lesson_id: str,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    lesson_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """
     Delete a specific lesson.

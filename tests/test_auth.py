@@ -32,7 +32,7 @@ class TestAuthRegister:
         invalid_data = {
             "name": "",  # Empty name
             "email": "invalid-email",  # Invalid email format
-            "password": "123"  # Too short password
+            "password": "123",  # Too short password
         }
         response = client.post("/auth/register", json=invalid_data)
 
@@ -70,10 +70,7 @@ class TestAuthLogin:
 
     def test_login_success(self, client: TestClient, test_user, test_user_data):
         """Test successful user login"""
-        login_data = {
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        }
+        login_data = {"email": test_user_data["email"], "password": test_user_data["password"]}
         response = client.post("/auth/login", json=login_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -85,10 +82,7 @@ class TestAuthLogin:
 
     def test_login_invalid_email(self, client: TestClient):
         """Test login with non-existent email"""
-        login_data = {
-            "email": "nonexistent@example.com",
-            "password": "somepassword"
-        }
+        login_data = {"email": "nonexistent@example.com", "password": "somepassword"}
         response = client.post("/auth/login", json=login_data)
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -96,10 +90,7 @@ class TestAuthLogin:
 
     def test_login_invalid_password(self, client: TestClient, test_user, test_user_data):
         """Test login with incorrect password"""
-        login_data = {
-            "email": test_user_data["email"],
-            "password": "wrongpassword"
-        }
+        login_data = {"email": test_user_data["email"], "password": "wrongpassword"}
         response = client.post("/auth/login", json=login_data)
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
@@ -117,10 +108,7 @@ class TestAuthLogin:
 
     def test_login_empty_credentials(self, client: TestClient):
         """Test login with empty credentials"""
-        empty_data = {
-            "email": "",
-            "password": ""
-        }
+        empty_data = {"email": "", "password": ""}
         response = client.post("/auth/login", json=empty_data)
 
         # Empty email is treated as a user not found (404) rather than validation error
@@ -129,10 +117,7 @@ class TestAuthLogin:
 
     def test_login_token_validity(self, client: TestClient, test_user, test_user_data):
         """Test that the returned token is valid and contains correct data"""
-        login_data = {
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        }
+        login_data = {"email": test_user_data["email"], "password": test_user_data["password"]}
         response = client.post("/auth/login", json=login_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -158,10 +143,7 @@ class TestAuthIntegration:
         assert register_response.status_code == status.HTTP_201_CREATED
 
         # Then login with same credentials
-        login_data = {
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        }
+        login_data = {"email": test_user_data["email"], "password": test_user_data["password"]}
         login_response = client.post("/auth/login", json=login_data)
         assert login_response.status_code == status.HTTP_200_OK
         assert "access_token" in login_response.json()
@@ -186,7 +168,7 @@ class TestAuthIntegration:
         """Test login with different email case"""
         login_data = {
             "email": test_user_data["email"].upper(),  # Different case
-            "password": test_user_data["password"]
+            "password": test_user_data["password"],
         }
         response = client.post("/auth/login", json=login_data)
 

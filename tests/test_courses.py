@@ -24,7 +24,7 @@ class TestCourseCreate:
             "price": 99.99,
             "category": "Programming",
             "tags": "python,testing,fastapi",
-            "is_published": False
+            "is_published": False,
         }
 
     def test_create_course_success(self, auth_client: TestClient, course_data):
@@ -45,10 +45,7 @@ class TestCourseCreate:
 
     def test_create_course_minimal_data(self, auth_client: TestClient):
         """Test course creation with minimal required data"""
-        minimal_data = {
-            "name": "Minimal Course",
-            "description": "Basic description"
-        }
+        minimal_data = {"name": "Minimal Course", "description": "Basic description"}
         response = auth_client.post("/courses/", json=minimal_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -90,7 +87,7 @@ class TestCourseList:
                 "category": "Programming",
                 "price": 49.99,
                 "is_published": True,
-                "user_id": test_user.id
+                "user_id": test_user.id,
             },
             {
                 "name": "Advanced Python",
@@ -98,7 +95,7 @@ class TestCourseList:
                 "category": "Programming",
                 "price": 99.99,
                 "is_published": False,
-                "user_id": test_user.id
+                "user_id": test_user.id,
             },
             {
                 "name": "Web Development",
@@ -106,8 +103,8 @@ class TestCourseList:
                 "category": "Web",
                 "price": 79.99,
                 "is_published": True,
-                "user_id": test_user.id
-            }
+                "user_id": test_user.id,
+            },
         ]
 
         for data in course_data:
@@ -192,7 +189,7 @@ class TestCourseDetail:
             category="Test",
             price=50.0,
             is_published=True,
-            user_id=test_user.id
+            user_id=test_user.id,
         )
         session.add(course)
         session.commit()
@@ -229,7 +226,7 @@ class TestCourseUpdate:
             category="Original",
             price=50.0,
             is_published=False,
-            user_id=test_user.id
+            user_id=test_user.id,
         )
         session.add(course)
         session.commit()
@@ -238,11 +235,7 @@ class TestCourseUpdate:
 
     def test_update_course_success(self, auth_client: TestClient, sample_course):
         """Test successful course update"""
-        update_data = {
-            "name": "Updated Course",
-            "description": "Updated description",
-            "price": 75.0
-        }
+        update_data = {"name": "Updated Course", "description": "Updated description", "price": 75.0}
         response = auth_client.put(f"/courses/{sample_course.id}", json=update_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -253,9 +246,7 @@ class TestCourseUpdate:
 
     def test_update_course_partial(self, auth_client: TestClient, sample_course):
         """Test partial course update"""
-        update_data = {
-            "name": "Partially Updated Course"
-        }
+        update_data = {"name": "Partially Updated Course"}
         response = auth_client.put(f"/courses/{sample_course.id}", json=update_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -320,7 +311,7 @@ class TestCourseDelete:
             category="Test",
             price=50.0,
             is_published=False,
-            user_id=test_user.id
+            user_id=test_user.id,
         )
         session.add(course)
         session.commit()
@@ -387,7 +378,7 @@ class TestCoursePublishing:
             category="Test",
             price=50.0,
             is_published=False,
-            user_id=test_user.id
+            user_id=test_user.id,
         )
         session.add(course)
         session.commit()
@@ -403,7 +394,7 @@ class TestCoursePublishing:
             category="Test",
             price=50.0,
             is_published=True,
-            user_id=test_user.id
+            user_id=test_user.id,
         )
         session.add(course)
         session.commit()
@@ -505,7 +496,7 @@ class TestCourseIntegration:
             "name": "Lifecycle Test Course",
             "description": "Testing complete lifecycle",
             "price": 99.99,
-            "category": "Test"
+            "category": "Test",
         }
         create_response = auth_client.post("/courses/", json=course_data)
         assert create_response.status_code == status.HTTP_200_OK
@@ -559,10 +550,7 @@ class TestCourseIntegration:
         user1_client = TestClient(app)
 
         # User1 creates a course
-        course_data = {
-            "name": "User1's Course",
-            "description": "This belongs to user1"
-        }
+        course_data = {"name": "User1's Course", "description": "This belongs to user1"}
         create_response = user1_client.post("/courses/", json=course_data)
         assert create_response.status_code == status.HTTP_200_OK
         course_id = create_response.json()["id"]

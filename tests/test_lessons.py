@@ -17,21 +17,12 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
@@ -41,7 +32,7 @@ class TestLessonRoutes:
             "content": "This is test content",
             "video_url": "https://example.com/video",
             "order": 1,
-            "section_id": section.id
+            "section_id": section.id,
         }
 
         # Create client with session override
@@ -65,11 +56,7 @@ class TestLessonRoutes:
     def test_create_lesson_section_not_found(self, session: Session):
         """Test lesson creation with non-existent section."""
         # Create a user first
-        user = User(
-            name="testuser",
-            email="test@example.com",
-            password="password123"
-        )
+        user = User(name="testuser", email="test@example.com", password="password123")
         session.add(user)
         session.commit()
         session.refresh(user)
@@ -78,7 +65,7 @@ class TestLessonRoutes:
             "title": "Test Lesson",
             "content": "This is test content",
             "order": 1,
-            "section_id": "nonexistent_section_id"  # Non-existent section ID
+            "section_id": "nonexistent_section_id",  # Non-existent section ID
         }
 
         # Create client with session override
@@ -97,31 +84,17 @@ class TestLessonRoutes:
         session.add(other_user)
         session.commit()
 
-        course = Course(
-            name="Other Course",
-            description="Other Description",
-            user_id=other_user.id
-        )
+        course = Course(name="Other Course", description="Other Description", user_id=other_user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Other Section",
-            description="Other Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Other Section", description="Other Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson_data = {
-            "title": "Test Lesson",
-            "content": "This is test content",
-            "order": 1,
-            "section_id": section.id
-        }
+        lesson_data = {"title": "Test Lesson", "content": "This is test content", "order": 1, "section_id": section.id}
 
         response = auth_client.post("/lessons/", json=lesson_data)
         assert response.status_code == 403
@@ -144,34 +117,19 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
         # Create multiple lessons
         lessons = [
-            Lesson(
-                title=f"Lesson {i}",
-                content=f"Content {i}",
-                order=i,
-                section_id=section.id
-            )
-            for i in range(1, 4)
+            Lesson(title=f"Lesson {i}", content=f"Content {i}", order=i, section_id=section.id) for i in range(1, 4)
         ]
         for lesson in lessons:
             session.add(lesson)
@@ -198,27 +156,13 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section1 = Section(
-            name="Section 1",
-            description="Section 1 Description",
-            order=1,
-            course_id=course.id
-        )
-        section2 = Section(
-            name="Section 2",
-            description="Section 2 Description",
-            order=2,
-            course_id=course.id
-        )
+        section1 = Section(name="Section 1", description="Section 1 Description", order=1, course_id=course.id)
+        section2 = Section(name="Section 2", description="Section 2 Description", order=2, course_id=course.id)
         session.add(section1)
         session.add(section2)
         session.commit()
@@ -226,18 +170,8 @@ class TestLessonRoutes:
         session.refresh(section2)
 
         # Create lessons for both sections
-        lesson1 = Lesson(
-            title="Lesson 1",
-            content="Content 1",
-            order=1,
-            section_id=section1.id
-        )
-        lesson2 = Lesson(
-            title="Lesson 2",
-            content="Content 2",
-            order=1,
-            section_id=section2.id
-        )
+        lesson1 = Lesson(title="Lesson 1", content="Content 1", order=1, section_id=section1.id)
+        lesson2 = Lesson(title="Lesson 2", content="Content 2", order=1, section_id=section2.id)
         session.add(lesson1)
         session.add(lesson2)
         session.commit()
@@ -259,34 +193,19 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
         # Create 5 lessons
         lessons = [
-            Lesson(
-                title=f"Lesson {i}",
-                content=f"Content {i}",
-                order=i,
-                section_id=section.id
-            )
-            for i in range(1, 6)
+            Lesson(title=f"Lesson {i}", content=f"Content {i}", order=i, section_id=section.id) for i in range(1, 6)
         ]
         for lesson in lessons:
             session.add(lesson)
@@ -311,21 +230,12 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
@@ -335,7 +245,7 @@ class TestLessonRoutes:
             content="Test Content",
             video_url="https://example.com/video",
             order=1,
-            section_id=section.id
+            section_id=section.id,
         )
         session.add(lesson)
         session.commit()
@@ -370,31 +280,17 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Original Title",
-            content="Original Content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Original Title", content="Original Content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
@@ -402,7 +298,7 @@ class TestLessonRoutes:
         update_data = {
             "title": "Updated Title",
             "content": "Updated Content",
-            "video_url": "https://example.com/new-video"
+            "video_url": "https://example.com/new-video",
         }
 
         # Create client with session override
@@ -426,21 +322,12 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
@@ -450,7 +337,7 @@ class TestLessonRoutes:
             content="Original Content",
             video_url="https://example.com/original",
             order=1,
-            section_id=section.id
+            section_id=section.id,
         )
         session.add(lesson)
         session.commit()
@@ -488,31 +375,17 @@ class TestLessonRoutes:
         session.add(other_user)
         session.commit()
 
-        course = Course(
-            name="Other Course",
-            description="Other Description",
-            user_id=other_user.id
-        )
+        course = Course(name="Other Course", description="Other Description", user_id=other_user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Other Section",
-            description="Other Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Other Section", description="Other Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Other Lesson",
-            content="Other Content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Other Lesson", content="Other Content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
@@ -530,31 +403,17 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test Content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test Content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
@@ -585,31 +444,17 @@ class TestLessonRoutes:
         session.add(other_user)
         session.commit()
 
-        course = Course(
-            name="Other Course",
-            description="Other Description",
-            user_id=other_user.id
-        )
+        course = Course(name="Other Course", description="Other Description", user_id=other_user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Other Section",
-            description="Other Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Other Section", description="Other Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Other Lesson",
-            content="Other Content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Other Lesson", content="Other Content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
@@ -625,34 +470,19 @@ class TestLessonRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
         # Create multiple lessons
         lessons = [
-            Lesson(
-                title=f"Lesson {i}",
-                content=f"Content {i}",
-                order=i,
-                section_id=section.id
-            )
-            for i in range(1, 4)
+            Lesson(title=f"Lesson {i}", content=f"Content {i}", order=i, section_id=section.id) for i in range(1, 4)
         ]
         for lesson in lessons:
             session.add(lesson)
@@ -666,8 +496,8 @@ class TestLessonRoutes:
             "lesson_orders": [
                 {"id": lessons[2].id, "order": 1},
                 {"id": lessons[1].id, "order": 2},
-                {"id": lessons[0].id, "order": 3}
-            ]
+                {"id": lessons[0].id, "order": 3},
+            ],
         }
 
         # Create client with session override
@@ -691,10 +521,7 @@ class TestLessonRoutes:
         """Test lesson reordering with non-existent section."""
         reorder_data = {
             "section_id": "nonexistent_section_id",
-            "lesson_orders": [
-                {"id": "lesson1", "order": 1},
-                {"id": "lesson2", "order": 2}
-            ]
+            "lesson_orders": [{"id": "lesson1", "order": 1}, {"id": "lesson2", "order": 2}],
         }
 
         response = auth_client.put("/lessons/reorder", json=reorder_data)
@@ -708,31 +535,19 @@ class TestLessonRoutes:
         session.add(other_user)
         session.commit()
 
-        course = Course(
-            name="Other Course",
-            description="Other Description",
-            user_id=other_user.id
-        )
+        course = Course(name="Other Course", description="Other Description", user_id=other_user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Other Section",
-            description="Other Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Other Section", description="Other Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
         reorder_data = {
             "section_id": section.id,
-            "lesson_orders": [
-                {"id": "lesson1", "order": 1},
-                {"id": "lesson2", "order": 2}
-            ]
+            "lesson_orders": [{"id": "lesson1", "order": 1}, {"id": "lesson2", "order": 2}],
         }
 
         response = auth_client.put("/lessons/reorder", json=reorder_data)
@@ -750,21 +565,12 @@ class TestLessonIntegration:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
@@ -775,7 +581,7 @@ class TestLessonIntegration:
             "content": "Initial content",
             "video_url": "https://example.com/video",
             "order": 1,
-            "section_id": section.id
+            "section_id": section.id,
         }
 
         # Create client with session override
@@ -793,10 +599,7 @@ class TestLessonIntegration:
         assert get_response.json()["title"] == "Test Lesson"
 
         # 3. Update lesson
-        update_data = {
-            "title": "Updated Lesson",
-            "content": "Updated content"
-        }
+        update_data = {"title": "Updated Lesson", "content": "Updated content"}
         update_response = client.put(f"/lessons/{lesson_id}", json=update_data)
         assert update_response.status_code == 200
         assert update_response.json()["title"] == "Updated Lesson"
@@ -819,61 +622,33 @@ class TestLessonIntegration:
         session.commit()
 
         # User 1's course and section
-        course1 = Course(
-            name="Course 1",
-            description="Description 1",
-            user_id=user1.id
-        )
+        course1 = Course(name="Course 1", description="Description 1", user_id=user1.id)
         session.add(course1)
         session.commit()
         session.refresh(course1)
 
-        section1 = Section(
-            name="Section 1",
-            description="Section 1 Description",
-            order=1,
-            course_id=course1.id
-        )
+        section1 = Section(name="Section 1", description="Section 1 Description", order=1, course_id=course1.id)
         session.add(section1)
         session.commit()
         session.refresh(section1)
 
-        lesson1 = Lesson(
-            title="Lesson 1",
-            content="Content 1",
-            order=1,
-            section_id=section1.id
-        )
+        lesson1 = Lesson(title="Lesson 1", content="Content 1", order=1, section_id=section1.id)
         session.add(lesson1)
         session.commit()
         session.refresh(lesson1)
 
         # User 2's course and section
-        course2 = Course(
-            name="Course 2",
-            description="Description 2",
-            user_id=user2.id
-        )
+        course2 = Course(name="Course 2", description="Description 2", user_id=user2.id)
         session.add(course2)
         session.commit()
         session.refresh(course2)
 
-        section2 = Section(
-            name="Section 2",
-            description="Section 2 Description",
-            order=1,
-            course_id=course2.id
-        )
+        section2 = Section(name="Section 2", description="Section 2 Description", order=1, course_id=course2.id)
         session.add(section2)
         session.commit()
         session.refresh(section2)
 
-        lesson2 = Lesson(
-            title="Lesson 2",
-            content="Content 2",
-            order=1,
-            section_id=section2.id
-        )
+        lesson2 = Lesson(title="Lesson 2", content="Content 2", order=1, section_id=section2.id)
         session.add(lesson2)
         session.commit()
         session.refresh(lesson2)
@@ -903,22 +678,13 @@ class TestLessonIntegration:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
         sections = [
-            Section(
-                name=f"Section {i}",
-                description=f"Section {i} Description",
-                order=i,
-                course_id=course.id
-            )
+            Section(name=f"Section {i}", description=f"Section {i} Description", order=i, course_id=course.id)
             for i in range(1, 4)
         ]
         for section in sections:
@@ -934,7 +700,7 @@ class TestLessonIntegration:
                     title=f"Section {i + 1} Lesson {j}",
                     content=f"Content for section {i + 1} lesson {j}",
                     order=j,
-                    section_id=section.id
+                    section_id=section.id,
                 )
                 session.add(lesson)
         session.commit()

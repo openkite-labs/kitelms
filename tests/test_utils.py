@@ -12,23 +12,15 @@ from backend.modules.auth import auth_methods
 
 def create_test_user_data(
     email: str = "test@example.com", name: str = "Test User", password: str = "testpass123"
-    ) -> Dict[str, str]:
+) -> Dict[str, str]:
     """Create test user data dictionary"""
-    return {
-        "name": name,
-        "email": email,
-        "password": password
-    }
+    return {"name": name, "email": email, "password": password}
 
 
 def create_test_user_in_db(session, user_data: Dict[str, str]) -> User:
     """Create a test user in the database"""
     hashed_password = auth_methods.hash_password(user_data["password"])
-    user = User(
-        name=user_data["name"],
-        email=user_data["email"],
-        password=hashed_password
-    )
+    user = User(name=user_data["name"], email=user_data["email"], password=hashed_password)
     session.add(user)
     session.commit()
     session.refresh(user)

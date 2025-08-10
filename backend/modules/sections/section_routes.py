@@ -29,9 +29,7 @@ section_router = APIRouter(prefix="/sections", tags=["sections"])
 
 @section_router.post("/", response_model=SectionResponse)
 def create_section_endpoint(
-    section_data: SectionCreate,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    section_data: SectionCreate, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """
     Create a new section for a specific course.
@@ -50,7 +48,7 @@ def get_sections_endpoint(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
     course_id: Optional[str] = Query(None),
-    session: Session = Depends(db_session)
+    session: Session = Depends(db_session),
 ):
     """
     Get sections with optional filtering by course_id.
@@ -58,10 +56,7 @@ def get_sections_endpoint(
     try:
         sections, total = get_sections(session, skip, limit, course_id)
         return SectionListResponse(
-            sections=[section_to_response(section) for section in sections],
-            total=total,
-            skip=skip,
-            limit=limit
+            sections=[section_to_response(section) for section in sections], total=total, skip=skip, limit=limit
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -71,7 +66,7 @@ def get_sections_endpoint(
 def reorder_sections_endpoint(
     reorder_data: SectionReorderRequest,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """
     Reorder sections within a course.
@@ -92,10 +87,7 @@ def reorder_sections_endpoint(
 
 
 @section_router.get("/{section_id}/with-lessons", response_model=SectionWithLessonsResponse)
-def get_section_with_lessons(
-    section_id: str,
-    session: Session = Depends(db_session)
-):
+def get_section_with_lessons(section_id: str, session: Session = Depends(db_session)):
     """
     Get a specific section by ID with its lessons.
     """
@@ -110,7 +102,7 @@ def update_section_endpoint(
     section_id: str,
     section_data: SectionUpdate,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """
     Update a specific section.
@@ -128,9 +120,7 @@ def update_section_endpoint(
 
 @section_router.delete("/{section_id}")
 def delete_section_endpoint(
-    section_id: str,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    section_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """
     Delete a specific section.

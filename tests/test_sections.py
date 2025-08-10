@@ -24,7 +24,7 @@ class TestSectionCreate:
             category="Test",
             price=50.0,
             is_published=False,
-            user_id=test_user.id
+            user_id=test_user.id,
         )
         session.add(course)
         session.commit()
@@ -38,7 +38,7 @@ class TestSectionCreate:
             "name": "Introduction",
             "description": "Course introduction section",
             "order": 1,
-            "course_id": sample_course.id
+            "course_id": sample_course.id,
         }
 
     def test_create_section_success(self, auth_client: TestClient, section_data):
@@ -66,7 +66,7 @@ class TestSectionCreate:
             "name": "Test Section",
             "description": "Test description",
             "order": 1,
-            "course_id": "nonexistent-course-id"
+            "course_id": "nonexistent-course-id",
         }
         response = auth_client.post("/sections/", json=section_data)
         assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -84,7 +84,7 @@ class TestSectionCreate:
             description="Course owned by another user",
             category="Test",
             price=50.0,
-            user_id=other_user.id
+            user_id=other_user.id,
         )
         session.add(other_course)
         session.commit()
@@ -94,7 +94,7 @@ class TestSectionCreate:
             "name": "Unauthorized Section",
             "description": "Should not be created",
             "order": 1,
-            "course_id": other_course.id
+            "course_id": other_course.id,
         }
         response = auth_client.post("/sections/", json=section_data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
@@ -118,18 +118,10 @@ class TestSectionList:
         """Create sample sections for testing"""
         # Create courses
         course1 = Course(
-            name="Course 1",
-            description="First course",
-            category="Programming",
-            price=49.99,
-            user_id=test_user.id
+            name="Course 1", description="First course", category="Programming", price=49.99, user_id=test_user.id
         )
         course2 = Course(
-            name="Course 2",
-            description="Second course",
-            category="Design",
-            price=79.99,
-            user_id=test_user.id
+            name="Course 2", description="Second course", category="Design", price=79.99, user_id=test_user.id
         )
         session.add_all([course1, course2])
         session.commit()
@@ -139,24 +131,9 @@ class TestSectionList:
         # Create sections
         sections = []
         section_data = [
-            {
-                "name": "Introduction",
-                "description": "Course introduction",
-                "order": 1,
-                "course_id": course1.id
-            },
-            {
-                "name": "Advanced Topics",
-                "description": "Advanced concepts",
-                "order": 2,
-                "course_id": course1.id
-            },
-            {
-                "name": "Getting Started",
-                "description": "Design basics",
-                "order": 1,
-                "course_id": course2.id
-            }
+            {"name": "Introduction", "description": "Course introduction", "order": 1, "course_id": course1.id},
+            {"name": "Advanced Topics", "description": "Advanced concepts", "order": 2, "course_id": course1.id},
+            {"name": "Getting Started", "description": "Design basics", "order": 1, "course_id": course2.id},
         ]
 
         for data in section_data:
@@ -232,40 +209,21 @@ class TestSectionDetail:
         from backend.models.database import Lesson
 
         course = Course(
-            name="Test Course",
-            description="Test description",
-            category="Test",
-            price=50.0,
-            user_id=test_user.id
+            name="Test Course", description="Test description", category="Test", price=50.0, user_id=test_user.id
         )
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test section description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test section description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
         # Add some lessons
         lessons = [
-            Lesson(
-                title="Lesson 1",
-                content="Content for lesson 1",
-                order=1,
-                section_id=section.id
-            ),
-            Lesson(
-                title="Lesson 2",
-                content="Content for lesson 2",
-                order=2,
-                section_id=section.id
-            )
+            Lesson(title="Lesson 1", content="Content for lesson 1", order=1, section_id=section.id),
+            Lesson(title="Lesson 2", content="Content for lesson 2", order=2, section_id=section.id),
         ]
         session.add_all(lessons)
         session.commit()
@@ -306,22 +264,13 @@ class TestSectionUpdate:
     def sample_section(self, session: Session, test_user):
         """Create a sample section for testing"""
         course = Course(
-            name="Test Course",
-            description="Test description",
-            category="Test",
-            price=50.0,
-            user_id=test_user.id
+            name="Test Course", description="Test description", category="Test", price=50.0, user_id=test_user.id
         )
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Original Section",
-            description="Original description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Original Section", description="Original description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
@@ -329,11 +278,7 @@ class TestSectionUpdate:
 
     def test_update_section_success(self, auth_client: TestClient, sample_section):
         """Test successful section update"""
-        update_data = {
-            "name": "Updated Section",
-            "description": "Updated description",
-            "order": 2
-        }
+        update_data = {"name": "Updated Section", "description": "Updated description", "order": 2}
         response = auth_client.put(f"/sections/{sample_section.id}", json=update_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -345,9 +290,7 @@ class TestSectionUpdate:
 
     def test_update_section_partial(self, auth_client: TestClient, sample_section):
         """Test partial section update"""
-        update_data = {
-            "name": "Partially Updated Section"
-        }
+        update_data = {"name": "Partially Updated Section"}
         response = auth_client.put(f"/sections/{sample_section.id}", json=update_data)
 
         assert response.status_code == status.HTTP_200_OK
@@ -380,17 +323,14 @@ class TestSectionUpdate:
             description="Course owned by another user",
             category="Test",
             price=50.0,
-            user_id=other_user.id
+            user_id=other_user.id,
         )
         session.add(other_course)
         session.commit()
         session.refresh(other_course)
 
         other_section = Section(
-            name="Other User's Section",
-            description="Section owned by another user",
-            order=1,
-            course_id=other_course.id
+            name="Other User's Section", description="Section owned by another user", order=1, course_id=other_course.id
         )
         session.add(other_section)
         session.commit()
@@ -409,21 +349,14 @@ class TestSectionDelete:
     def sample_section(self, session: Session, test_user):
         """Create a sample section for testing"""
         course = Course(
-            name="Test Course",
-            description="Test description",
-            category="Test",
-            price=50.0,
-            user_id=test_user.id
+            name="Test Course", description="Test description", category="Test", price=50.0, user_id=test_user.id
         )
         session.add(course)
         session.commit()
         session.refresh(course)
 
         section = Section(
-            name="Section to Delete",
-            description="This section will be deleted",
-            order=1,
-            course_id=course.id
+            name="Section to Delete", description="This section will be deleted", order=1, course_id=course.id
         )
         session.add(section)
         session.commit()
@@ -465,17 +398,14 @@ class TestSectionDelete:
             description="Course owned by another user",
             category="Test",
             price=50.0,
-            user_id=other_user.id
+            user_id=other_user.id,
         )
         session.add(other_course)
         session.commit()
         session.refresh(other_course)
 
         other_section = Section(
-            name="Other User's Section",
-            description="Section owned by another user",
-            order=1,
-            course_id=other_course.id
+            name="Other User's Section", description="Section owned by another user", order=1, course_id=other_course.id
         )
         session.add(other_section)
         session.commit()
@@ -493,11 +423,7 @@ class TestSectionReorder:
     def sample_sections_for_reorder(self, session: Session, test_user):
         """Create sample sections for reordering tests"""
         course = Course(
-            name="Test Course",
-            description="Test description",
-            category="Test",
-            price=50.0,
-            user_id=test_user.id
+            name="Test Course", description="Test description", category="Test", price=50.0, user_id=test_user.id
         )
         session.add(course)
         session.commit()
@@ -506,10 +432,7 @@ class TestSectionReorder:
         sections = []
         for i in range(3):
             section = Section(
-                name=f"Section {i + 1}",
-                description=f"Description {i + 1}",
-                order=i + 1,
-                course_id=course.id
+                name=f"Section {i + 1}", description=f"Description {i + 1}", order=i + 1, course_id=course.id
             )
             session.add(section)
             sections.append(section)
@@ -530,8 +453,8 @@ class TestSectionReorder:
             "section_orders": [
                 {"id": sections[2].id, "order": 1},
                 {"id": sections[1].id, "order": 2},
-                {"id": sections[0].id, "order": 3}
-            ]
+                {"id": sections[0].id, "order": 3},
+            ],
         }
 
         response = auth_client.put("/sections/reorder", json=reorder_data)
@@ -557,10 +480,7 @@ class TestSectionReorder:
 
         reorder_data = {
             "course_id": course.id,
-            "section_orders": [
-                {"id": sections[0].id, "order": 2},
-                {"id": sections[1].id, "order": 1}
-            ]
+            "section_orders": [{"id": sections[0].id, "order": 2}, {"id": sections[1].id, "order": 1}],
         }
 
         response = client.put("/sections/reorder", json=reorder_data)
@@ -570,10 +490,7 @@ class TestSectionReorder:
         """Test reordering sections for non-existent course"""
         reorder_data = {
             "course_id": "nonexistent-course",
-            "section_orders": [
-                {"id": "section1", "order": 1},
-                {"id": "section2", "order": 2}
-            ]
+            "section_orders": [{"id": "section1", "order": 1}, {"id": "section2", "order": 2}],
         }
 
         response = auth_client.put("/sections/reorder", json=reorder_data)
@@ -592,7 +509,7 @@ class TestSectionReorder:
             description="Course owned by another user",
             category="Test",
             price=50.0,
-            user_id=other_user.id
+            user_id=other_user.id,
         )
         session.add(other_course)
         session.commit()
@@ -600,10 +517,7 @@ class TestSectionReorder:
 
         reorder_data = {
             "course_id": other_course.id,
-            "section_orders": [
-                {"id": "section1", "order": 1},
-                {"id": "section2", "order": 2}
-            ]
+            "section_orders": [{"id": "section1", "order": 1}, {"id": "section2", "order": 2}],
         }
 
         response = auth_client.put("/sections/reorder", json=reorder_data)
@@ -621,7 +535,7 @@ class TestSectionIntegration:
             "name": "Integration Test Course",
             "description": "Course for integration testing",
             "category": "Test",
-            "price": 99.99
+            "price": 99.99,
         }
         course_response = auth_client.post("/courses/", json=course_data)
         assert course_response.status_code == status.HTTP_200_OK
@@ -632,7 +546,7 @@ class TestSectionIntegration:
             "name": "Test Section",
             "description": "Section for integration testing",
             "order": 1,
-            "course_id": course["id"]
+            "course_id": course["id"],
         }
         create_response = auth_client.post("/sections/", json=section_data)
         assert create_response.status_code == status.HTTP_200_OK
@@ -647,10 +561,7 @@ class TestSectionIntegration:
         assert "lessons" in section_detail
 
         # 4. Update the section
-        update_data = {
-            "name": "Updated Test Section",
-            "description": "Updated description"
-        }
+        update_data = {"name": "Updated Test Section", "description": "Updated description"}
         update_response = auth_client.put(f"/sections/{section['id']}", json=update_data)
         assert update_response.status_code == status.HTTP_200_OK
         updated_section = update_response.json()
@@ -695,18 +606,10 @@ class TestSectionIntegration:
 
         # Create courses for each user
         course1 = Course(
-            name="User 1 Course",
-            description="Course owned by user 1",
-            category="Test",
-            price=50.0,
-            user_id=user1.id
+            name="User 1 Course", description="Course owned by user 1", category="Test", price=50.0, user_id=user1.id
         )
         course2 = Course(
-            name="User 2 Course",
-            description="Course owned by user 2",
-            category="Test",
-            price=50.0,
-            user_id=user2.id
+            name="User 2 Course", description="Course owned by user 2", category="Test", price=50.0, user_id=user2.id
         )
         session.add_all([course1, course2])
         session.commit()
@@ -715,16 +618,10 @@ class TestSectionIntegration:
 
         # Create sections for each course
         section1 = Section(
-            name="User 1 Section",
-            description="Section in user 1's course",
-            order=1,
-            course_id=course1.id
+            name="User 1 Section", description="Section in user 1's course", order=1, course_id=course1.id
         )
         section2 = Section(
-            name="User 2 Section",
-            description="Section in user 2's course",
-            order=1,
-            course_id=course2.id
+            name="User 2 Section", description="Section in user 2's course", order=1, course_id=course2.id
         )
         session.add_all([section1, section2])
         session.commit()

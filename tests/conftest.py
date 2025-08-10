@@ -43,22 +43,14 @@ def client_fixture(session: Session):
 @pytest.fixture
 def test_user_data():
     """Sample user data for testing"""
-    return {
-        "name": "Test User",
-        "email": "test@example.com",
-        "password": "testpassword123"
-    }
+    return {"name": "Test User", "email": "test@example.com", "password": "testpassword123"}
 
 
 @pytest.fixture
 def test_user(session: Session, test_user_data):
     """Create a test user in the database"""
     hashed_password = auth_methods.hash_password(test_user_data["password"])
-    user = User(
-        name=test_user_data["name"],
-        email=test_user_data["email"],
-        password=hashed_password
-    )
+    user = User(name=test_user_data["name"], email=test_user_data["email"], password=hashed_password)
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -75,6 +67,7 @@ def auth_headers(test_user):
 @pytest.fixture(name="auth_client")
 def auth_client_fixture(session: Session, test_user):
     """Create a test client with authentication override"""
+
     def get_session_override():
         return session
 
@@ -91,8 +84,4 @@ def auth_client_fixture(session: Session, test_user):
 @pytest.fixture
 def another_user_data():
     """Another sample user data for testing conflicts"""
-    return {
-        "name": "Another User",
-        "email": "another@example.com",
-        "password": "anotherpassword123"
-    }
+    return {"name": "Another User", "email": "another@example.com", "password": "anotherpassword123"}

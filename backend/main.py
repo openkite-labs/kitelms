@@ -6,6 +6,7 @@ from backend.core.settings import settings
 from backend.modules.auth.auth_routes import auth_router
 from backend.modules.courses.course_routes import course_router
 from backend.modules.discussions.discussion_routes import discussion_router
+from backend.modules.enrollments.enrollment_routes import enrollment_router
 from backend.modules.lessons.lesson_routes import lesson_router
 from backend.modules.sections.section_routes import section_router
 from backend.modules.users.user_routes import user_router
@@ -31,6 +32,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(course_router)
 app.include_router(discussion_router)
+app.include_router(enrollment_router)
 app.include_router(section_router)
 app.include_router(lesson_router)
 app.include_router(user_router)

@@ -22,9 +22,7 @@ course_router = APIRouter(prefix="/courses", tags=["courses"])
 
 @course_router.post("/", response_model=CourseResponse)
 async def create_new_course(
-    course_data: CourseCreate,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    course_data: CourseCreate, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """Create a new course."""
     try:
@@ -44,7 +42,7 @@ async def list_courses(
     search: Optional[str] = Query(None),
     my_courses: bool = Query(False),
     session: Session = Depends(db_session),
-    current_user: Optional[str] = Depends(get_current_user)
+    current_user: Optional[str] = Depends(get_current_user),
 ):
     """Get a list of courses with optional filtering, search, and my_courses functionality."""
     # If my_courses is True, filter by current user
@@ -57,24 +55,16 @@ async def list_courses(
         user_id=filter_user_id,
         is_published=is_published,
         category=category,
-        search_query=search
+        search_query=search,
     )
 
     course_responses = [course_to_response(course) for course in courses]
 
-    return CourseListResponse(
-        courses=course_responses,
-        total=total,
-        page=skip // limit + 1,
-        per_page=limit
-    )
+    return CourseListResponse(courses=course_responses, total=total, page=skip // limit + 1, per_page=limit)
 
 
 @course_router.get("/{course_id}", response_model=CourseResponse)
-async def get_course(
-    course_id: str,
-    session: Session = Depends(db_session)
-):
+async def get_course(course_id: str, session: Session = Depends(db_session)):
     """Get a specific course by ID."""
     course = get_course_by_id(session, course_id)
 
@@ -89,7 +79,7 @@ async def update_course_endpoint(
     course_id: str,
     course_data: CourseUpdate,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """Update a course. Only the course owner can update it."""
     try:
@@ -107,9 +97,7 @@ async def update_course_endpoint(
 
 @course_router.delete("/{course_id}")
 async def delete_course_endpoint(
-    course_id: str,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    course_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """Delete a course. Only the course owner can delete it."""
     try:
@@ -127,9 +115,7 @@ async def delete_course_endpoint(
 
 @course_router.post("/{course_id}/publish", response_model=CourseResponse)
 async def publish_course_endpoint(
-    course_id: str,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    course_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """Publish a course."""
     try:
@@ -147,9 +133,7 @@ async def publish_course_endpoint(
 
 @course_router.post("/{course_id}/unpublish", response_model=CourseResponse)
 async def unpublish_course_endpoint(
-    course_id: str,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    course_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """Unpublish a course."""
     try:

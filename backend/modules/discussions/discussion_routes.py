@@ -27,7 +27,7 @@ discussion_router = APIRouter(prefix="/discussions", tags=["discussions"])
 def create_discussion_endpoint(
     discussion_data: DiscussionCreate,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """
     Create a new discussion. Lesson ID should be provided in the request body.
@@ -47,7 +47,7 @@ def get_discussions_endpoint(
     limit: int = Query(10, ge=1, le=100),
     lesson_id: Optional[str] = Query(None),
     include_user_info: bool = Query(False),
-    session: Session = Depends(db_session)
+    session: Session = Depends(db_session),
 ):
     """
     Get discussions with optional filtering by lesson_id.
@@ -58,18 +58,14 @@ def get_discussions_endpoint(
             discussions=[discussion_to_response(d, include_user_info) for d in discussions],
             total=total,
             skip=skip,
-            limit=limit
+            limit=limit,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @discussion_router.get("/{discussion_id}", response_model=DiscussionResponse)
-def get_discussion(
-    discussion_id: str,
-    include_user_info: bool = Query(False),
-    session: Session = Depends(db_session)
-):
+def get_discussion(discussion_id: str, include_user_info: bool = Query(False), session: Session = Depends(db_session)):
     """
     Get a specific discussion by ID.
     """
@@ -84,7 +80,7 @@ def update_discussion_endpoint(
     discussion_id: str,
     discussion_data: DiscussionUpdate,
     session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    current_user: str = Depends(get_current_user),
 ):
     """
     Update a discussion. Only the author can update their discussion.
@@ -102,9 +98,7 @@ def update_discussion_endpoint(
 
 @discussion_router.delete("/{discussion_id}")
 def delete_discussion_endpoint(
-    discussion_id: str,
-    session: Session = Depends(db_session),
-    current_user: str = Depends(get_current_user)
+    discussion_id: str, session: Session = Depends(db_session), current_user: str = Depends(get_current_user)
 ):
     """
     Delete a discussion. Only the author can delete their discussion.

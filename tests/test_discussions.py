@@ -17,39 +17,22 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
-        discussion_data = {
-            "content": "This is a test discussion",
-            "lesson_id": lesson.id
-        }
+        discussion_data = {"content": "This is a test discussion", "lesson_id": lesson.id}
 
         # Create client with session override
         client = TestClient(app)
@@ -73,10 +56,7 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        discussion_data = {
-            "content": "This is a test discussion",
-            "lesson_id": "nonexistent_lesson_id"
-        }
+        discussion_data = {"content": "This is a test discussion", "lesson_id": "nonexistent_lesson_id"}
 
         # Create client with session override
         client = TestClient(app)
@@ -89,10 +69,7 @@ class TestDiscussionRoutes:
 
     def test_create_discussion_unauthorized(self, client: TestClient):
         """Test discussion creation without authentication."""
-        discussion_data = {
-            "content": "This is a test discussion",
-            "lesson_id": "some_lesson_id"
-        }
+        discussion_data = {"content": "This is a test discussion", "lesson_id": "some_lesson_id"}
 
         response = client.post("/discussions/", json=discussion_data)
         # The endpoint first checks if lesson exists, so with non-existent lesson_id it returns 404
@@ -126,46 +103,24 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
         # Create multiple discussions
-        discussion1 = Discussion(
-            content="First discussion",
-            lesson_id=lesson.id,
-            user_id=user.id
-        )
-        discussion2 = Discussion(
-            content="Second discussion",
-            lesson_id=lesson.id,
-            user_id=user.id
-        )
+        discussion1 = Discussion(content="First discussion", lesson_id=lesson.id, user_id=user.id)
+        discussion2 = Discussion(content="Second discussion", lesson_id=lesson.id, user_id=user.id)
         session.add(discussion1)
         session.add(discussion2)
         session.commit()
@@ -191,37 +146,18 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson1 = Lesson(
-            title="Test Lesson 1",
-            content="Test lesson content 1",
-            order=1,
-            section_id=section.id
-        )
-        lesson2 = Lesson(
-            title="Test Lesson 2",
-            content="Test lesson content 2",
-            order=2,
-            section_id=section.id
-        )
+        lesson1 = Lesson(title="Test Lesson 1", content="Test lesson content 1", order=1, section_id=section.id)
+        lesson2 = Lesson(title="Test Lesson 2", content="Test lesson content 2", order=2, section_id=section.id)
         session.add(lesson1)
         session.add(lesson2)
         session.commit()
@@ -229,21 +165,9 @@ class TestDiscussionRoutes:
         session.refresh(lesson2)
 
         # Create discussions for both lessons
-        discussion1 = Discussion(
-            content="Discussion for lesson 1",
-            lesson_id=lesson1.id,
-            user_id=user.id
-        )
-        discussion2 = Discussion(
-            content="Another discussion for lesson 1",
-            lesson_id=lesson1.id,
-            user_id=user.id
-        )
-        discussion3 = Discussion(
-            content="Discussion for lesson 2",
-            lesson_id=lesson2.id,
-            user_id=user.id
-        )
+        discussion1 = Discussion(content="Discussion for lesson 1", lesson_id=lesson1.id, user_id=user.id)
+        discussion2 = Discussion(content="Another discussion for lesson 1", lesson_id=lesson1.id, user_id=user.id)
+        discussion3 = Discussion(content="Discussion for lesson 2", lesson_id=lesson2.id, user_id=user.id)
         session.add(discussion1)
         session.add(discussion2)
         session.add(discussion3)
@@ -269,42 +193,24 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
         # Create 5 discussions
         for i in range(5):
-            discussion = Discussion(
-                content=f"Discussion {i + 1}",
-                lesson_id=lesson.id,
-                user_id=user.id
-            )
+            discussion = Discussion(content=f"Discussion {i + 1}", lesson_id=lesson.id, user_id=user.id)
             session.add(discussion)
         session.commit()
 
@@ -338,40 +244,22 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
-        discussion = Discussion(
-            content="Test discussion content",
-            lesson_id=lesson.id,
-            user_id=user.id
-        )
+        discussion = Discussion(content="Test discussion content", lesson_id=lesson.id, user_id=user.id)
         session.add(discussion)
         session.commit()
         session.refresh(discussion)
@@ -402,47 +290,27 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
-        discussion = Discussion(
-            content="Original content",
-            lesson_id=lesson.id,
-            user_id=user.id
-        )
+        discussion = Discussion(content="Original content", lesson_id=lesson.id, user_id=user.id)
         session.add(discussion)
         session.commit()
         session.refresh(discussion)
 
-        update_data = {
-            "content": "Updated content"
-        }
+        update_data = {"content": "Updated content"}
 
         # Create client with session override
         client = TestClient(app)
@@ -462,9 +330,7 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        update_data = {
-            "content": "Updated content"
-        }
+        update_data = {"content": "Updated content"}
 
         # Create client with session override
         client = TestClient(app)
@@ -484,48 +350,28 @@ class TestDiscussionRoutes:
         session.add(user2)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user1.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user1.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
         # Create discussion by user1
-        discussion = Discussion(
-            content="Original content",
-            lesson_id=lesson.id,
-            user_id=user1.id
-        )
+        discussion = Discussion(content="Original content", lesson_id=lesson.id, user_id=user1.id)
         session.add(discussion)
         session.commit()
         session.refresh(discussion)
 
-        update_data = {
-            "content": "Updated content"
-        }
+        update_data = {"content": "Updated content"}
 
         # Try to update as user2
         client = TestClient(app)
@@ -543,40 +389,22 @@ class TestDiscussionRoutes:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
-        discussion = Discussion(
-            content="Test discussion content",
-            lesson_id=lesson.id,
-            user_id=user.id
-        )
+        discussion = Discussion(content="Test discussion content", lesson_id=lesson.id, user_id=user.id)
         session.add(discussion)
         session.commit()
         session.refresh(discussion)
@@ -618,41 +446,23 @@ class TestDiscussionRoutes:
         session.add(user2)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user1.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user1.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
 
         # Create discussion by user1
-        discussion = Discussion(
-            content="Test discussion content",
-            lesson_id=lesson.id,
-            user_id=user1.id
-        )
+        discussion = Discussion(content="Test discussion content", lesson_id=lesson.id, user_id=user1.id)
         session.add(discussion)
         session.commit()
         session.refresh(discussion)
@@ -677,31 +487,17 @@ class TestDiscussionIntegration:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
@@ -712,10 +508,7 @@ class TestDiscussionIntegration:
         client.app.dependency_overrides[auth_methods.get_current_user] = lambda: user.id
 
         # 1. Create discussion
-        discussion_data = {
-            "content": "Initial discussion content",
-            "lesson_id": lesson.id
-        }
+        discussion_data = {"content": "Initial discussion content", "lesson_id": lesson.id}
         response = client.post("/discussions/", json=discussion_data)
         assert response.status_code == 200
         discussion_id = response.json()["id"]
@@ -748,31 +541,17 @@ class TestDiscussionIntegration:
         session.add(user2)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user1.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user1.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
-        lesson = Lesson(
-            title="Test Lesson",
-            content="Test lesson content",
-            order=1,
-            section_id=section.id
-        )
+        lesson = Lesson(title="Test Lesson", content="Test lesson content", order=1, section_id=section.id)
         session.add(lesson)
         session.commit()
         session.refresh(lesson)
@@ -782,10 +561,7 @@ class TestDiscussionIntegration:
         client1.app.dependency_overrides[db_session] = lambda: session
         client1.app.dependency_overrides[auth_methods.get_current_user] = lambda: user1.id
 
-        discussion_data = {
-            "content": "User1's discussion",
-            "lesson_id": lesson.id
-        }
+        discussion_data = {"content": "User1's discussion", "lesson_id": lesson.id}
         response = client1.post("/discussions/", json=discussion_data)
         assert response.status_code == 200
         discussion_id = response.json()["id"]
@@ -823,38 +599,19 @@ class TestDiscussionIntegration:
         session.add(user)
         session.commit()
 
-        course = Course(
-            name="Test Course",
-            description="Test Description",
-            user_id=user.id
-        )
+        course = Course(name="Test Course", description="Test Description", user_id=user.id)
         session.add(course)
         session.commit()
         session.refresh(course)
 
-        section = Section(
-            name="Test Section",
-            description="Test Section Description",
-            order=1,
-            course_id=course.id
-        )
+        section = Section(name="Test Section", description="Test Section Description", order=1, course_id=course.id)
         session.add(section)
         session.commit()
         session.refresh(section)
 
         # Create two lessons
-        lesson1 = Lesson(
-            title="Test Lesson 1",
-            content="Test lesson content 1",
-            order=1,
-            section_id=section.id
-        )
-        lesson2 = Lesson(
-            title="Test Lesson 2",
-            content="Test lesson content 2",
-            order=2,
-            section_id=section.id
-        )
+        lesson1 = Lesson(title="Test Lesson 1", content="Test lesson content 1", order=1, section_id=section.id)
+        lesson2 = Lesson(title="Test Lesson 2", content="Test lesson content 2", order=2, section_id=section.id)
         session.add(lesson1)
         session.add(lesson2)
         session.commit()
