@@ -4,11 +4,43 @@ KiteLMS is a learning management system that allows users to create, manage, and
 
 ## Features
 
-- Create and manage courses
-- Track course progress
-- Assign and grade assignments
-- Communicate with students and instructors
-- Integrate with external tools and platforms
+### Course Management
+- Create and manage courses with descriptions, cover images, and video previews
+- Organize courses into sections and lessons
+- Set course pricing and categories
+- Publish/unpublish courses
+- Reorder sections and lessons within courses
+
+### User Management & Authentication
+- User registration and login system
+- Role-based access control (different user roles)
+- User profile management
+- User banning functionality
+
+### Enrollment & Billing
+- Course enrollment system
+- Integrated billing and payment processing
+- Multiple payment methods support
+- Transaction tracking and status management
+- Course purchase workflow
+
+### Learning Content
+- Structured course sections and lessons
+- Video-based lessons with content support
+- Lesson ordering and organization
+- Progress tracking through course structure
+
+### Communication & Collaboration
+- Discussion forums for lessons
+- Timeline posts and comments system
+- User interactions and community features
+- Social learning environment
+
+### Content Organization
+- Hierarchical course structure (Course → Section → Lesson)
+- Flexible content management
+- Media support (images, videos)
+- Tagging and categorization system
 
 ## Test Coverage
 
