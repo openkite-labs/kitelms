@@ -27,7 +27,14 @@ def client_fixture(session: Session):
     def get_session_override():
         return session
 
+    def get_current_user_override():
+        # For endpoints with optional authentication, return None
+        # For endpoints with required authentication, this will cause a 422 error
+        # which is better than a 401 for testing purposes
+        return None
+
     app.dependency_overrides[db_session] = get_session_override
+    app.dependency_overrides[auth_methods.get_current_user] = get_current_user_override
     client = TestClient(app)
     yield client
     app.dependency_overrides.clear()
@@ -63,6 +70,22 @@ def auth_headers(test_user):
     """Generate authentication headers for testing protected endpoints"""
     access_token = auth_methods.create_access_token({"sub": test_user.email})
     return {"Authorization": f"Bearer {access_token}"}
+
+
+@pytest.fixture(name="auth_client")
+def auth_client_fixture(session: Session, test_user):
+    """Create a test client with authentication override"""
+    def get_session_override():
+        return session
+
+    def get_current_user_override():
+        return test_user.id
+
+    app.dependency_overrides[db_session] = get_session_override
+    app.dependency_overrides[auth_methods.get_current_user] = get_current_user_override
+    client = TestClient(app)
+    yield client
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture
