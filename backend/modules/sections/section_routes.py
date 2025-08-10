@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
@@ -65,37 +65,6 @@ def get_sections_endpoint(
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-@section_router.get("/with-lessons", response_model=List[SectionWithLessonsResponse])
-def get_sections_with_lessons_endpoint(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
-    course_id: Optional[str] = Query(None),
-    session: Session = Depends(db_session)
-):
-    """
-    Get sections with their lessons, optionally filtered by course_id.
-    """
-    try:
-        sections, _ = get_sections(session, skip, limit, course_id)
-        return [section_with_lessons_to_response(section) for section in sections]
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@section_router.get("/{section_id}", response_model=SectionResponse)
-def get_section(
-    section_id: str,
-    session: Session = Depends(db_session)
-):
-    """
-    Get a specific section by ID.
-    """
-    section = get_section_by_id(session, section_id)
-    if not section:
-        raise HTTPException(status_code=404, detail="Section not found")
-    return section_to_response(section)
 
 
 @section_router.get("/{section_id}/with-lessons", response_model=SectionWithLessonsResponse)

@@ -11,7 +11,8 @@ from backend.modules.courses.course_methods import (
     delete_course,
     get_course_by_id,
     get_courses,
-    toggle_course_publication,
+    publish_course,
+    unpublish_course,
     update_course,
 )
 from backend.modules.courses.course_schema import CourseCreate, CourseListResponse, CourseResponse, CourseUpdate
@@ -124,15 +125,35 @@ async def delete_course_endpoint(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@course_router.patch("/{course_id}/toggle-publication", response_model=CourseResponse)
-async def toggle_course_publication_endpoint(
+@course_router.post("/{course_id}/publish", response_model=CourseResponse)
+async def publish_course_endpoint(
     course_id: str,
     session: Session = Depends(db_session),
     current_user: str = Depends(get_current_user)
 ):
-    """Toggle the publication status of a course."""
+    """Publish a course."""
     try:
-        course = toggle_course_publication(session, course_id, current_user)
+        course = publish_course(session, course_id, current_user)
+
+        if not course:
+            raise HTTPException(status_code=404, detail="Course not found")
+
+        return course_to_response(course)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@course_router.post("/{course_id}/unpublish", response_model=CourseResponse)
+async def unpublish_course_endpoint(
+    course_id: str,
+    session: Session = Depends(db_session),
+    current_user: str = Depends(get_current_user)
+):
+    """Unpublish a course."""
+    try:
+        course = unpublish_course(session, course_id, current_user)
 
         if not course:
             raise HTTPException(status_code=404, detail="Course not found")

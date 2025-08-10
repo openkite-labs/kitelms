@@ -212,9 +212,9 @@ def search_courses(
     return courses, total
 
 
-def toggle_course_publication(session: Session, course_id: str, user_id: str) -> Optional[Course]:
+def publish_course(session: Session, course_id: str, user_id: str) -> Optional[Course]:
     """
-    Toggle the publication status of a course.
+    Publish a course.
     """
     course = get_course_by_id(session, course_id)
 
@@ -225,7 +225,29 @@ def toggle_course_publication(session: Session, course_id: str, user_id: str) ->
     if course.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized to modify this course")
 
-    course.is_published = not course.is_published
+    course.is_published = True
+    course.updated_at = datetime.now()
+
+    session.add(course)
+    session.commit()
+    session.refresh(course)
+    return course
+
+
+def unpublish_course(session: Session, course_id: str, user_id: str) -> Optional[Course]:
+    """
+    Unpublish a course.
+    """
+    course = get_course_by_id(session, course_id)
+
+    if not course:
+        return None
+
+    # Check if user owns the course
+    if course.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to modify this course")
+
+    course.is_published = False
     course.updated_at = datetime.now()
 
     session.add(course)
